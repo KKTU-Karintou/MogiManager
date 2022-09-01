@@ -6,6 +6,8 @@ import Global as G
 import MainWindow
 import Wakeup
 
+PASSWORD = ""
+
 # ルートウィンドウ作成
 G.root.title("模擬店マネージャー ver.1.0.0a")
 G.root.geometry('960x540')
@@ -15,7 +17,7 @@ Wakeup.FrmWakeup.place(y=0, x=0)
 
 def nextWindow():
     pw = Wakeup.EntPassword.get()
-    if pw=="password":
+    if pw==PASSWORD:
         Wakeup.FrmWakeup.place_forget()
         G.root.geometry('1280x720')
         MainWindow.FrmMainWindow.place(y=0, x=0)
