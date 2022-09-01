@@ -23,7 +23,7 @@ def nextWindow():
         msg.showwarning("", "パスワードが正しくありません")
     
 
-BtnChange = tk.Button(Wakeup.cv.CvArea, text="営業開始", command=nextWindow, font=("", 35), bg="#1111ff", width=8, height=2)
+BtnChange = tk.Button(Wakeup.FrmWakeup, text="営業開始", command=nextWindow, font=("", 35), bg="#1111ff", width=8, height=2)
 BtnChange.place(y=460, x=480, anchor=tk.CENTER)
 
 # メインループ
