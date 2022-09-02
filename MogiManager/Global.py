@@ -1,10 +1,20 @@
 import tkinter as tk
+import datetime as dt
 
+# ルートウィンドウ
 root = tk.Tk()
 
+# グローバル変数
+OpenDate = '2022年01月01日 (月)'
+NowTime = '00時00分'
+
+# 汎用イベント処理
 def CloseApp():
     root.destroy()
 
+
+
+# 関数用クラス
 class refer():
     def DrawGrid(self, frame, width: int, height: int):
         self.CvArea = tk.Canvas(frame, width=width, height=height)
