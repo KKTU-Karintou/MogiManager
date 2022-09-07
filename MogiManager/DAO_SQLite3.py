@@ -18,7 +18,7 @@ class Dao():
     def AddItem(self, identity: V.item):
         cur = self.conn.cursor()
 
-        data = (str(V.item.name), int(str(V.item.price)), str(V.item.inTax), str(V.item.reduceTax), str(V.item.stocks))
+        data = (identity.name, identity.price, identity.inTax, identity.reduceTax, identity.stocks)
         query = 'INSERT INTO items (item, price, inTax, redTax, stock) VALUES (?, ?, ?, ?, ?)'
 
         cur.execute(query, data)
