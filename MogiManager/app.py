@@ -6,18 +6,16 @@ import Global as G
 import MainWindow
 import Wakeup
 
-PASSWORD = ""
-
 # ルートウィンドウ作成
 G.root.title("模擬店マネージャー ver.1.0.0a")
-G.root.geometry('960x540')
+G.root.geometry("960x540")
 G.root.maxsize(width=1920, height=1080)
 
 Wakeup.FrmWakeup.place(y=0, x=0)
 
 def nextWindow():
     pw = Wakeup.EntPassword.get()
-    if pw==PASSWORD:
+    if pw==G.WakeupPASSWORD:
         G.OpenDate = Wakeup.DeOpenDate.get_date()
         d_week = {'Sun': '日', 'Mon': '月', 'Tue': '火', 'Wed': '水',
                   'Thu': '木', 'Fri': '金', 'Sat': '土'}
@@ -29,7 +27,7 @@ def nextWindow():
 
         Wakeup.FrmWakeup.place_forget()
         G.root.geometry("1920x1080")
-        G.root.attributes('-fullscreen', True)
+        #G.root.attributes('-fullscreen', True)
         MainWindow.FrmMainWindow.place(y=0, x=0)
     else:
         msg.showwarning("", "パスワードが正しくありません")
