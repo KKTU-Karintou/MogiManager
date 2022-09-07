@@ -17,20 +17,18 @@ openDate = tk.StringVar()
 DeOpenDate = tkc.DateEntry(master=FrmWakeup, textvariable=openDate, showweeknumbers=False, state="readonly", font=("", 20))
 DeOpenDate.place(y=150, x=450, anchor="w")
 
-# 天候
-LblWeather = tk.Label(FrmWakeup, text="天気", font=("", 25), anchor="e")
-LblWeather.place(y=200, x=430, anchor="e")
-weathers = ["晴れ", "くもり", "雨", "雪", "その他"]
-weather = tk.StringVar()
-CbWeather = ttk.Combobox(FrmWakeup, value=weathers, textvariable=weather, state="readonly", font=("", 20), width=10)
-CbWeather.place(y=200, x=450, anchor="w")
-
 # 初期現金
 LblInitMoney = tk.Label(FrmWakeup, text="初期現金                円", font=("", 25), anchor="e")
-LblInitMoney.place(y=250, x=624, anchor="e")
+LblInitMoney.place(y=200, x=624, anchor="e")
 initMoney = tk.IntVar()
 EntInitMoney = tk.Entry(FrmWakeup, textvariable=initMoney, font=("", 25), width=7, justify="right")
-EntInitMoney.place(y=250, x=450, anchor="w")
+EntInitMoney.place(y=200, x=450, anchor="w")
+
+# 担当者 Person In Charge : PIC
+LblPIC = tk.Label(FrmWakeup, text="担当者", font=("", 25), anchor="e")
+LblPIC.place(y=250, x=430, anchor="e")
+EntPIC = tk.Entry(FrmWakeup, font=("", 20), width=10)
+EntPIC.place(y=250, x=450, anchor="w")
 
 # パスワード
 LblPassword = tk.Label(FrmWakeup, text="起動パスワード", font=("", 25), anchor="e")
