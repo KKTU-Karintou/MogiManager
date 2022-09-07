@@ -3,6 +3,7 @@ from re import T
 import tkinter as tk
 import datetime as dt
 import Global as G
+import Settings as S
 
 WIN_W = 1920
 WIN_H = 1080
@@ -26,6 +27,23 @@ LblOpenDate.place(y=10, x=10)
 nowTime = tk.StringVar()
 LblNowTime = tk.Label(cv.CvArea, textvariable=nowTime, font=("", 40), bd=3, relief=tk.SOLID, width=8)
 LblNowTime.place(y=20, x=WIN_W/2, anchor=tk.N)
+
+
+# commands
+def OpenSettings():
+    S.initWindow()
+    S.master.grab_set()
+    S.master.focus_set()
+    S.master.transient(G.root)
+    S.master.deiconify()
+    G.root.wait_window(S.temp)
+    if G.root!=None:
+        S.master.grab_release()
+
+
+BtnSettings = tk.Button(cv.CvArea, command=OpenSettings, text="🔑", font=("", 30), bg="orange", width=5, height=1)
+BtnSettings.place(y=10, x=WIN_W-10, anchor="ne")
+
 
 ### 注文タブ        Orders
 FrmOrder = tk.Frame(cv.CvArea, width=TAB_W, height=TAB_H)
