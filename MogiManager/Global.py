@@ -1,5 +1,4 @@
 import tkinter as tk
-import datetime as dt
 
 # ルートウィンドウ
 root = tk.Tk()
@@ -8,14 +7,8 @@ root = tk.Tk()
 OpenDate = '2022年01月01日 (月)'
 NowTime = '00時00分'
 
-WakeupPASSWORD = ""
-AdminPASSWORD = "ggrks"
-
-# 汎用イベント処理
-def CloseApp():
-    root.destroy()
-
-
+WAKEUP_PASSWORD = ""
+ADMIN_PASSWORD = "ggrks"
 
 # 関数用クラス
 class refer():
