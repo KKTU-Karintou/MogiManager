@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+import tkinter.messagebox as msg
 import Global as G
 
 WIN_W = 1280
@@ -31,22 +31,22 @@ EntAdminPswd.place(y=40, x=920, anchor="w")
 
 def checkPass():
     pswd = EntAdminPswd.get()
-    if pswd == G.AdminPASSWORD:
+    if pswd == G.ADMIN_PASSWORD:
         BtnPower.config(state='active')
         EntAdminPswd.delete(0, tk.END)
         FrmSettingButtons.place(y=WIN_H/2-40, x=WIN_W/2, anchor="c")
     else:
-        messagebox.showwarning("", "パスワードが間違っています")
+        msg.showwarning("", "パスワードが間違っています")
 
 BtnActivate = tk.Button(FrmSettings, text="認証", command=checkPass, font=("", 20), width=5, height=1)
 BtnActivate.place(y=40, x=1100, anchor="w")
 
 def Shutdown():
-    if messagebox.askyesno("アプリケーションの終了", "終了してよろしいですか？"):
+    if msg.askyesno("アプリケーションの終了", "終了してよろしいですか？"):
         G.root.destroy()
         G.root = None
 
-pwr = tk.PhotoImage(file=r"C:\Users\nakashima\Documents\VSCode\MogiManager\MogiManager\MogiManager\Layout\powerButton.png")
+pwr = tk.PhotoImage(file=r"C:\Users\nakashima\Documents\VSCode\MogiManager\MogiManager\MogiManager\powerButton.png")
 pwr = pwr.subsample(60, 60)
 BtnPower = tk.Button(FrmSettings, image=pwr, command=Shutdown, bg="green", width=60, height=60, state='disabled')
 BtnPower.place(y=10, x=1270, anchor="ne")

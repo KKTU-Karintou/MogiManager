@@ -15,7 +15,7 @@ Wakeup.FrmWakeup.place(y=0, x=0)
 
 def nextWindow():
     pw = Wakeup.EntPassword.get()
-    if pw==G.WakeupPASSWORD:
+    if pw==G.WAKEUP_PASSWORD:
         G.OpenDate = Wakeup.DeOpenDate.get_date()
         d_week = {'Sun': '日', 'Mon': '月', 'Tue': '火', 'Wed': '水',
                   'Thu': '木', 'Fri': '金', 'Sat': '土'}
@@ -25,9 +25,9 @@ def nextWindow():
         G.OpenDate = d
         MainWindow.openDate.set(d)
 
-        Wakeup.FrmWakeup.place_forget()
+        Wakeup.FrmWakeup.destroy()
         G.root.geometry("1920x1080")
-        #G.root.attributes('-fullscreen', True)
+        G.root.attributes('-fullscreen', True)
         MainWindow.FrmMainWindow.place(y=0, x=0)
     else:
         msg.showwarning("", "パスワードが正しくありません")

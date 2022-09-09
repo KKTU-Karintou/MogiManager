@@ -8,7 +8,7 @@ OpenDate = '2022年01月01日 (月)'
 NowTime = '00時00分'
 
 WAKEUP_PASSWORD = ""
-ADMIN_PASSWORD = "ggrks"
+ADMIN_PASSWORD = ""
 
 # 関数用クラス
 class refer():
