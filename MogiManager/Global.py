@@ -10,6 +10,9 @@ NowTime = '00時00分'
 WAKEUP_PASSWORD = ""
 ADMIN_PASSWORD = ""
 
+# システム設定用
+ShowStocks = True
+
 # 関数用クラス
 class refer():
     def DrawGrid(self, frame, width: int, height: int):
