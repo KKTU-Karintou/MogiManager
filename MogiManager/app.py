@@ -13,29 +13,6 @@ G.root.maxsize(width=1920, height=1080)
 
 Wakeup.FrmWakeup.place(y=0, x=0)
 
-def nextWindow():
-    pw = Wakeup.EntPassword.get()
-    if pw==G.WAKEUP_PASSWORD:
-        G.OpenDate = Wakeup.DeOpenDate.get_date()
-        d_week = {'Sun': '日', 'Mon': '月', 'Tue': '火', 'Wed': '水',
-                  'Thu': '木', 'Fri': '金', 'Sat': '土'}
-        key = G.OpenDate.strftime('%a')
-        w = d_week[key]
-        d = G.OpenDate.strftime('営業日：%Y年%m月%d日 ') + f'{w}'
-        G.OpenDate = d
-        MainWindow.openDate.set(d)
-
-        Wakeup.FrmWakeup.destroy()
-        G.root.geometry("1920x1080")
-        G.root.attributes('-fullscreen', True)
-        MainWindow.FrmMainWindow.place(y=0, x=0)
-    else:
-        msg.showwarning("", "パスワードが正しくありません")
-    
-
-BtnChange = tk.Button(Wakeup.FrmWakeup, text="営業開始", command=nextWindow, font=("", 35), bg="#1111ff", width=8, height=2)
-BtnChange.place(y=460, x=480, anchor=tk.CENTER)
-
 # アプリケーション開始処理
 MainWindow.clock()
 G.root.mainloop()

@@ -91,26 +91,14 @@ LblItemCount.place(y=30, x=BaseX+475, anchor="c")
 LblItemStock = tk.Label(FrmMenus, text="在庫数", font=("", 25))
 LblItemStock.place(y=30, x=BaseX+680, anchor="c")
 
-def CountDown(event):
-    n = event.widget["textvariable"].get()
-
-    print(n)
-
-def CountUp(event):
-    n = event.widget["textvariable"].get()
-    print(n)
-
-
 def PlaceItem(data: R.ItemSet):
     for i in range(len(data)):
         print("Setting")
         data[i].lbl_name.place(y=BaseY+SpanY*i, x=BaseX, anchor="c")
         data[i].lbl_price.place(y=BaseY+SpanY*i, x=BaseX+300, anchor="c")
         data[i].btn_countdown.place(y=BaseY+SpanY*i, x=BaseX+450, anchor="e")
-        data[i].btn_countdown.bind("<1>", CountDown)
         data[i].lbl_count.place(y=BaseY+SpanY*i, x=BaseX+475, anchor="c")
         data[i].btn_countup.place(y=BaseY+SpanY*i, x=BaseX+500, anchor="w")
-        data[i].btn_countup.bind("<1>", CountUp)
 
         FrmMenus.config(height=BaseY+SpanY*i+50)
 PlaceItem(row_data)

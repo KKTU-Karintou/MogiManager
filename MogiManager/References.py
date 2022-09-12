@@ -46,3 +46,16 @@ class ItemSet(tk.Frame):
         self.NoC = tk.IntVar()
         self.lbl_count = tk.Label(master, textvariable=self.NoC, font=("", 25), bd=3)
         self.btn_countup = tk.Button(master, text="+", font=("", 25), bd=3, bg="aqua")
+
+        def countDown():
+            n = self.NoC.get()
+            if(n>0):
+                self.NoC.set(n-1)
+
+        def countUp():
+            n = self.NoC.get()
+            if(n<100):
+                self.NoC.set(n+1)
+
+        self.btn_countdown.config(command=countDown)
+        self.btn_countup.config(command=countUp)
