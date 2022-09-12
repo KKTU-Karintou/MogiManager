@@ -51,7 +51,9 @@ def nextWindow():
         key = G.OpenDate.strftime('%a')
         w = d_week[key]
         d = G.OpenDate.strftime('営業日：%Y年%m月%d日 ') + f'{w}'
+        e = G.OpenDate.strftime('%Y_%m_%d')
         G.OpenDate = d
+        G.OpenDateStr = e
         M.openDate.set(d)
 
         FrmWakeup.destroy()
