@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 import tkcalendar as tkc
 import tkinter.messagebox as msg
 import Global as G
+import MainWindow as M
 
 FrmWakeup = tk.Frame(G.root, width=960, height=540)
 
@@ -35,6 +36,29 @@ LblPassword = tk.Label(FrmWakeup, text="起動パスワード", font=("", 25), a
 LblPassword.place(y=335, x=430, anchor="e")
 EntPassword = tk.Entry(FrmWakeup, font=("", 25), width=15, show="*")
 EntPassword.place(y=335, x=450, anchor="w")
+
+def nextWindow():
+    pw = EntPassword.get()
+    if pw==G.WAKEUP_PASSWORD:
+        G.OpenDate = DeOpenDate.get_date()
+        d_week = {'Sun': '日', 'Mon': '月', 'Tue': '火', 'Wed': '水',
+                  'Thu': '木', 'Fri': '金', 'Sat': '土'}
+        key = G.OpenDate.strftime('%a')
+        w = d_week[key]
+        d = G.OpenDate.strftime('営業日：%Y年%m月%d日 ') + f'{w}'
+        G.OpenDate = d
+        M.openDate.set(d)
+
+        FrmWakeup.destroy()
+        G.root.geometry("1920x1080")
+        G.root.attributes('-fullscreen', True)
+        M.FrmMainWindow.place(y=0, x=0)
+    else:
+        msg.showwarning("", "パスワードが正しくありません")
+    
+
+BtnChange = tk.Button(FrmWakeup, text="営業開始", command=nextWindow, font=("", 35), bg="#1111ff", width=8, height=2)
+BtnChange.place(y=460, x=480, anchor=tk.CENTER)
 
 def Shutdown():
     if msg.askyesno("アプリケーションの終了", "終了してよろしいですか？"):
