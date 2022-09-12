@@ -46,6 +46,8 @@ class ItemSet(tk.Frame):
         self.NoC = tk.IntVar()
         self.lbl_count = tk.Label(master, textvariable=self.NoC, font=("", 25), bd=3)
         self.btn_countup = tk.Button(master, text="+", font=("", 25), bd=3, bg="aqua")
+        self.NoS = tk.IntVar()
+        self.lbl_stock = tk.Label(master, textvariable=self.NoS, font=("", 25), bd=3)
 
         def countDown():
             n = self.NoC.get()

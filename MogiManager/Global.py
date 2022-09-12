@@ -4,6 +4,7 @@ import tkinter as tk
 root = tk.Tk()
 
 # グローバル変数
+OpenDateStr = '2022_01_01'
 OpenDate = '2022年01月01日 (月)'
 NowTime = '00時00分'
 

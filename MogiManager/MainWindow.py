@@ -1,16 +1,16 @@
 #メインウィンドウ
 import tkinter as tk
+import DAO_SQLite3 as dao
 import datetime as dt
 import Global as G
 import Settings as S
-import DAO_SQLite3 as dao
 import References as R
 
 
 WIN_W = 1920
 WIN_H = 1080
-TAB_W = 1720
-TAB_H = 900
+TAB_W = 1920
+TAB_H = 880 
 
         # グリッドを使うには G.refer クラスの DrawGrid メソッドを使ってください
         # 配置が終わったら置換機能で インスタンス名.CvArea を 各フレーム名に設定してください
@@ -31,57 +31,23 @@ nowTime = tk.StringVar()
 LblNowTime = tk.Label(cv.CvArea, textvariable=nowTime, font=("", 40), bd=3, relief=tk.SOLID, width=8)
 LblNowTime.place(y=20, x=WIN_W/2, anchor=tk.N)
 
-
-# commands
-def OpenSettings():
-    S.initWindow()
-    S.master.grab_set()
-    S.master.focus_set()
-    S.master.transient(G.root)
-    S.master.deiconify()
-    G.root.wait_window(S.temp)
-    if G.root!=None:
-        S.master.grab_release()
-
-
-BtnSettings = tk.Button(cv.CvArea, command=OpenSettings, text="🔑", font=("", 30), bg="orange", width=5, height=1)
-BtnSettings.place(y=10, x=WIN_W-10, anchor="ne")
-
-
-
-
-
 ### 注文タブ        Orders
+# cv2.CvArea -> FrmOrderTab
 FrmOrderTab = tk.Frame(cv.CvArea, width=TAB_W, height=TAB_H, bd=1, relief=tk.SOLID)
 cv2 = G.refer()
-cv2.DrawGrid(FrmOrderTab, TAB_W-2, TAB_H-2)
+cv2.DrawGrid(FrmOrderTab, TAB_W, TAB_H)
 cv2.CvArea.config(bg="aqua")
 FrmOrderTab.place(y=WIN_H, x=WIN_W, anchor="se")
 
-LblTitleOrder = tk.Label(cv2.CvArea, text="注文タブ", font=("", 45))
-LblTitleOrder.place(y=0, x=0)
-
 FrmOrderMenu = R.ScrollableFrame(cv2.CvArea, bar_x=False)
-FrmOrderMenu.place(y=100, x=20, width=1000, height=600)
-
+FrmOrderMenu.place(y=20, x=20, width=1000, height=700)
 
 FrmMenus = FrmOrderMenu.scrollable_frame
 FrmMenus.config(width=1000, bg="yellow green")
-row_data = []
-o = dao.Dao()
-items = o.FindAllItems()
-print("LIST:"+ str(len(items)))
-for i in range(len(items)):
-    item = R.ItemSet(FrmMenus)
-    item.name.set(items[i].name)
-    print(items[i].name)
-    item.price.set(items[i].price)
-    row_data.append(item)
 
 BaseX = 200
 BaseY = 100
 SpanY = 75
-
 LblItemName = tk.Label(FrmMenus, text="商品名", font=("", 25))
 LblItemName.place(y=30, x=BaseX, anchor="c")
 LblItemPrice = tk.Label(FrmMenus, text="価格", font=("", 25))
@@ -91,17 +57,30 @@ LblItemCount.place(y=30, x=BaseX+475, anchor="c")
 LblItemStock = tk.Label(FrmMenus, text="在庫数", font=("", 25))
 LblItemStock.place(y=30, x=BaseX+680, anchor="c")
 
-def PlaceItem(data: R.ItemSet):
-    for i in range(len(data)):
-        print("Setting")
-        data[i].lbl_name.place(y=BaseY+SpanY*i, x=BaseX, anchor="c")
-        data[i].lbl_price.place(y=BaseY+SpanY*i, x=BaseX+300, anchor="c")
-        data[i].btn_countdown.place(y=BaseY+SpanY*i, x=BaseX+450, anchor="e")
-        data[i].lbl_count.place(y=BaseY+SpanY*i, x=BaseX+475, anchor="c")
-        data[i].btn_countup.place(y=BaseY+SpanY*i, x=BaseX+500, anchor="w")
+BaseY2 = 10
+BaseX2 = 1800
+SpanY2 = 100
+Font = ("", 30)
+LblSubtotal = tk.Label(cv2.CvArea, text="小計                      円", font=Font, anchor="e")
+LblSubtotal.place(y=BaseY2+SpanY2, x=BaseX2, anchor="e")
+LblIntax = tk.Label(cv2.CvArea, text="内税                      円", font=Font, anchor="e")
+LblIntax.place(y=BaseY2+SpanY2*2, x=BaseX2, anchor="e")
+LblOuttax = tk.Label(cv2.CvArea, text="外税                      円", font=Font, anchor="e")
+LblOuttax.place(y=BaseY2+SpanY2*3, x=BaseX2, anchor="e")
+LblTotal = tk.Label(cv2.CvArea, text="合計                      円", font=Font, anchor="e")
+LblTotal.place(y=BaseY2+SpanY2*4, x=BaseX2, anchor="e")
+LblReceive = tk.Label(cv2.CvArea, text="お預かり                      円", font=Font, anchor="e")
+LblReceive.place(y=BaseY2+SpanY2*5, x=BaseX2, anchor="e")
+LblChange = tk.Label(cv2.CvArea, text="おつり                      円", font=Font, anchor="e")
+LblChange.place(y=BaseY2+SpanY2*6, x=BaseX2, anchor="e")
 
-        FrmMenus.config(height=BaseY+SpanY*i+50)
-PlaceItem(row_data)
+def ClearOrder():
+    for i in range(len(row_data)):
+        row_data[i].NoC.set(0)
+
+BtnClearOrder = tk.Button(cv2.CvArea, command=ClearOrder, text="注文一括クリア", font=("", 35))
+BtnClearOrder.place(y=740, x=50, width=350, height=100)
+
 
 # タブ切り替え
 def OrderTab():
@@ -150,18 +129,18 @@ for i in range(4):
     Btn = tk.Button(cv.CvArea, bg="blue", font=("", 28), bd=3, relief=tk.SOLID)
     BtnTab.append(Btn)
 
-_BaseY = 300
-_BaseX = 10
+_BaseY = 100
+_BaseX = 40
 BTN_W = 180
 BTN_H = 100
 BtnTab[0].config(text="注文受付", command=OrderTab)
 BtnTab[0].place(y=_BaseY, x=_BaseX, width=BTN_W, height=BTN_H)
 BtnTab[1].config(text="整理券", command=RefNumTab, bg="blue")
-BtnTab[1].place(y=_BaseY+95, x=_BaseX, width=BTN_W, height=BTN_H)
+BtnTab[1].place(y=_BaseY, x=_BaseX+175, width=BTN_W, height=BTN_H)
 BtnTab[2].config(text="在庫", command=StockTab, bg="blue")
-BtnTab[2].place(y=_BaseY+190, x=_BaseX, width=BTN_W, height=BTN_H)
+BtnTab[2].place(y=_BaseY, x=_BaseX+350, width=BTN_W, height=BTN_H)
 BtnTab[3].config(text="注文履歴", command=PastOrderTab)
-BtnTab[3].place(y=_BaseY+285, x=_BaseX, width=BTN_W, height=BTN_H)
+BtnTab[3].place(y=_BaseY, x=_BaseX+525, width=BTN_W, height=BTN_H)
 
 def TabButtonChange(this: int):
     for i in range(4):
@@ -170,8 +149,45 @@ def TabButtonChange(this: int):
         else:
             BtnTab[i].config(bg="blue", fg="white", font=("", 28, "normal"))
 
+
+# settings
+def OpenSettings():
+    S.initWindow()
+    S.master.grab_set()
+    S.master.focus_set()
+    S.master.transient(G.root)
+    S.master.deiconify()
+    G.root.wait_window(S.temp)
+    if G.root!=None:
+        S.master.grab_release()
+
+BtnSettings = tk.Button(cv.CvArea, command=OpenSettings, text="🔑", font=("", 30), bg="orange", width=5, height=1)
+BtnSettings.place(y=10, x=WIN_W-10, anchor="ne")
+
+# 初期化
 OrderTab()
 TabButtonChange(0)
+
+def PlaceItem(data: R.ItemSet):
+    for i in range(len(data)):
+        data[i].lbl_name.place(y=BaseY+SpanY*i, x=BaseX, anchor="c")
+        data[i].lbl_price.place(y=BaseY+SpanY*i, x=BaseX+300, anchor="c")
+        data[i].btn_countdown.place(y=BaseY+SpanY*i, x=BaseX+450, anchor="e")
+        data[i].lbl_count.place(y=BaseY+SpanY*i, x=BaseX+475, anchor="c")
+        data[i].btn_countup.place(y=BaseY+SpanY*i, x=BaseX+500, anchor="w")
+        data[i].lbl_stock.place(y=BaseY+SpanY*i, x=BaseX+680, anchor="c")
+
+        FrmMenus.config(height=BaseY+SpanY*i+50)
+
+o = dao.Dao()
+row_data = []
+items = o.FindAllItems()
+for i in range(len(items)):
+    item = R.ItemSet(FrmMenus)
+    item.name.set(items[i].name)
+    item.price.set(items[i].price)
+    row_data.append(item)
+PlaceItem(row_data)
 
 ### 関数
 def clock():
