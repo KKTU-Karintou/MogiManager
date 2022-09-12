@@ -1,14 +1,19 @@
 import sqlite3 as SQL
 import DAO_VARIABLE as V
+import Global as G
 
 #variable_name
 #FunctionName
 
 class Dao():
+    # Common
     def __init__(self):
         self._file_name = "Date.db"
         self.conn = SQL.connect(self._file_name)
 
+        self.ordersTable = "O" + G.OpenDateStr
+
+    # Products
     def CreatItemsTable(self):
         cur = self.conn.cursor()
 
@@ -31,7 +36,7 @@ class Dao():
         cur = self.conn.cursor()
 
         data = (identity.name, identity.price, identity.inTax, identity.reduceTax, identity.stocks)
-        query = 'INSERT INTO items (item, price, inTax, redTax, stock) VALUES (?, ?, ?, ?, ?)'
+        query = "INSERT INTO items (item, price, inTax, redTax, stock) VALUES (?, ?, ?, ?, ?)"
 
         cur.execute(query, data)
         self.conn.commit()
@@ -42,17 +47,17 @@ class Dao():
         cur = self.conn.cursor()
 
         data = (identity.name, identity.price, identity.inTax, identity.reduceTax, identity.stocks, identity.id)
-        query = 'UPDATE items SET item=?, price=?, inTax=?, redTax=?, stock=? WHERE id=?'
+        query = "UPDATE items SET item=?, price=?, inTax=?, redTax=?, stock=? WHERE id=?"
 
         cur.execute(query, data)
         self.conn.commit()
 
     def DeleteItem(self, id: int):
         self.CreatItemsTable()
-
-        id = (id,)
+        
         cur = self.conn.cursor()
 
+        id = (id,)
         cur.execute("DELETE FROM items WHERE id=?", id)
         self.conn.commit()
 
@@ -98,3 +103,93 @@ class Dao():
         else:
             return None
 
+    # Orders
+    def CreatOrdersTable(self):
+        cur = self.conn.cursor()
+
+        query = "CREATE TABLE IF NOT EXISTS " + self.ordersTable + " (id INTEGER PRIMARY KEY AUTOINCREMENT, refNum INTEGER, orderTime TEXT, orders TEXT, state TEXT)"
+
+        cur.execute(query)
+        self.conn.commit()
+
+    def DropOrdersTable(self):
+        cur = self.conn.cursor()
+
+        query = "DROP TABLE IF EXISTS " + self.ordersTable
+
+        cur.execute(query)
+        self.conn.commit()
+
+    def AddOrder(self, order: V.order):
+        self.CreatOrdersTable()
+
+        cur = self.conn.cursor()
+
+        data = (order.refNum, order.orderTime, order.orders, order.state)
+        query = "INSERT INTO " + self.ordersTable + " (refNum, orderTime, orders, state) VALUES (?, ?, ?, ?)"
+
+        cur.execute(query, data)
+        self.conn.commit()
+
+    def UpdateOrder(self, order: V.order):
+        self.CreatOrdersTable()
+
+        cur = self.conn.cursor()
+
+        data = (order.orders, order.state, order.id)
+        query = "UPDATE " + self.ordersTable + " SET orders=?, state=? WHERE id=?"
+
+        cur.execute(query, data)
+        self.conn.commit()
+
+    def DeleteOrder(self, id: int):
+        self.CreatOrdersTable()
+        
+        cur = self.conn.cursor()
+
+        id = (id,)
+        query = "DELETE FROM " + self.ordersTable + " WHERE id=?"
+        cur.execute(query, id)
+        self.conn.commit()
+
+    def FindAllOrder(self):
+        self.CreatOrdersTable()
+
+        cur = self.conn.cursor()
+
+        ret = []
+        for data in cur.execute("SELECT * FROM " + self.ordersTable):
+            print(data)
+            d = V.order()
+            d.id = data[0]
+            d.refNo = data[1]
+            d.orderTime = data[2]
+            d.orders = data[3]
+            d.state = data[4]
+
+            ret.append(d)
+
+        return ret
+
+    def FindOrderById(self, id: int):
+        self.CreatOrdersTable()
+
+        id = (id,)
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM " + self.ordersTable + " WHERE id=?", id)
+
+        data = cur.fetchone()
+
+        ret = V.order
+        if(data != None):
+            print(data)
+            d = V.order()
+            d.id = data[0]
+            d.refNo = data[1]
+            d.orderTime = data[2]
+            d.orders = data[3]
+            d.state = data[4]
+
+            return ret
+        else:
+            return None

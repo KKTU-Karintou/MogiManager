@@ -7,5 +7,15 @@ class item():
         self.reduceTax: bool
         self.stocks: str
 
-class stock():
-    test = 0
+class order():
+    def __init__(self):
+        self.id: int
+        self.refNum: int
+        self.orderTime: str
+        self.orders: str
+        self.total: int
+        self.inTax: int
+        self.outTax: int
+        self.recieve: int
+        self.changes: int
+        self.state: str
