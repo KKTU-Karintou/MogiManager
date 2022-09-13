@@ -11,6 +11,9 @@ G.root.title("模擬店マネージャー ver.1.0.0a")
 G.root.geometry("960x540")
 G.root.maxsize(width=1920, height=1080)
 
+monitor_height = G.root.winfo_screenheight()
+monitor_width = G.root.winfo_screenwidth()
+  
 FrmWakeup = tk.Frame(G.root, width=960, height=540)
 FrmWakeup.place(y=0, x=0)
 
@@ -60,7 +63,8 @@ def nextWindow():
 
         FrmWakeup.destroy()
         G.root.geometry("1920x1080")
-        G.root.attributes('-fullscreen', True)
+        if(monitor_height==1920 and monitor_width==1080):
+            G.root.attributes('-fullscreen', True)
         M.FrmMainWindow.place(y=0, x=0)
     else:
         msg.showwarning("", "パスワードが正しくありません")

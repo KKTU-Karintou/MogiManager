@@ -48,7 +48,7 @@ def Shutdown():
         G.root.destroy()
         G.root = None
 
-pwr = tk.PhotoImage(file=r"C:\Users\nakashima\Documents\VSCode\MogiManager\MogiManager\MogiManager\powerButton.png")
+pwr = tk.PhotoImage(file="MogiManager/powerButton.png")
 pwr = pwr.subsample(60, 60)
 BtnPower = tk.Button(FrmSettings, image=pwr, command=Shutdown, bg="green", width=60, height=60, state='disabled')
 BtnPower.place(y=10, x=1270, anchor="ne")
