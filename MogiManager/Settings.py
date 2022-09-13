@@ -1,15 +1,17 @@
 import tkinter as tk
 import tkinter.messagebox as msg
 import Global as G
+import SubSettings as S
 
 WIN_W = 1280
 WIN_H = 720
 WIN_SIZE = "1280x720"
 
-master = tk.Toplevel(G.root, width=WIN_W, height=WIN_H)
+master = tk.Toplevel(width=WIN_W, height=WIN_H)
 master.title("システム設定")
 master.geometry(WIN_SIZE)
 master.maxsize(WIN_W, WIN_H)
+master.minsize(WIN_W, WIN_H)
 master.withdraw()
 
 temp: tk.Label
@@ -71,8 +73,20 @@ BtnSetOpening = common()
 BtnSetOpening.config(text="営業時間設定", command="")
 BtnSetOpening.place(y=0, x=FRM_W, anchor="ne")
 
+def OpenSetProduct():
+    S.RefreshTable()
+    S.initWindow()
+    S.master.geometry("1280x720")
+    S.FrmSetProduct.place(y=0, x=0)
+    S.master.grab_set()
+    S.master.focus_set()
+    S.master.transient(master)
+    S.master.deiconify()
+    master.wait_window(S.temp)
+    S.master.grab_release()
+
 BtnSetItems = common()
-BtnSetItems.config(text="販売品目設定", command="")
+BtnSetItems.config(text="販売品目設定", command=OpenSetProduct)
 BtnSetItems.place(y=FRM_H/2, x=0, anchor="w")
 
 BtnSetStocks = common()

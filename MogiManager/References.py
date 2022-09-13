@@ -61,3 +61,15 @@ class ItemSet(tk.Frame):
 
         self.btn_countdown.config(command=countDown)
         self.btn_countup.config(command=countUp)
+
+class ProductSet(tk.Frame):
+    def __init__(self, master: tk.Misc):
+        self.name = tk.StringVar()
+        self.lbl_name = tk.Label(master, textvariable=self.name, font=("", 25), width=20, bd=3)
+        self.price = tk.IntVar()
+        self.lbl_price = tk.Label(master, textvariable=self.price, font=("", 25), width=8, bd=3)
+        self.inTax = tk.StringVar()
+        self.lbl_inTax = tk.Label(master, textvariable=self.inTax, font=("", 25), bd=3)
+        self.redTax = tk.StringVar()
+        self.lbl_redTax = tk.Label(master, textvariable=self.redTax, font=("", 25), bd=3)
+        self.btn_edit = tk.Button(master, text="編集", font=("", 20), bd=3, bg="orange")

@@ -4,15 +4,20 @@ import tkinter as tk
 root = tk.Tk()
 
 # グローバル変数
+OpenDateYear = '2022'
 OpenDateStr = '2022_01_01'
 OpenDate = '2022年01月01日 (月)'
 NowTime = '00時00分'
 
+MASTER_PASSWORD = "#MASTER"
 WAKEUP_PASSWORD = ""
 ADMIN_PASSWORD = ""
 
 # システム設定用
-ShowStocks = True
+UseReferenceFunc = False
+UseStockFunc = False
+UseShowOrderFunc = False
+UseShowInfoFunc = False
 
 # 関数用クラス
 class refer():

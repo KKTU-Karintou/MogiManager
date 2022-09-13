@@ -8,7 +8,7 @@ import Global as G
 class Dao():
     # Common
     def __init__(self):
-        self._file_name = "Date.db"
+        self._file_name = G.OpenDateYear + "_Data.db"
         self.conn = SQL.connect(self._file_name)
 
         self.ordersTable = "O" + G.OpenDateStr
