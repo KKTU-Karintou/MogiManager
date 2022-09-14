@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import Global as G
+import SettingPanels as S
 
 class ScrollableFrame(ttk.Frame):
     def __init__(self, container, bar_x = True, bar_y = True):
@@ -48,6 +49,8 @@ class ItemSet(tk.Frame):
         self.btn_countup = tk.Button(master, text="+", font=("", 25), bd=3, bg="aqua")
         self.NoS = tk.IntVar()
         self.lbl_stock = tk.Label(master, textvariable=self.NoS, font=("", 25), bd=3)
+        self.inTax = False
+        self.redTax = False
 
         def countDown():
             n = self.NoC.get()
@@ -64,12 +67,23 @@ class ItemSet(tk.Frame):
 
 class ProductSet(tk.Frame):
     def __init__(self, master: tk.Misc):
+        self.id = 0
         self.name = tk.StringVar()
         self.lbl_name = tk.Label(master, textvariable=self.name, font=("", 25), width=20, bd=3)
         self.price = tk.IntVar()
         self.lbl_price = tk.Label(master, textvariable=self.price, font=("", 25), width=8, bd=3)
+        self.bool_inTax = False
         self.inTax = tk.StringVar()
         self.lbl_inTax = tk.Label(master, textvariable=self.inTax, font=("", 25), bd=3)
+        self.bool_redTax = False
         self.redTax = tk.StringVar()
         self.lbl_redTax = tk.Label(master, textvariable=self.redTax, font=("", 25), bd=3)
         self.btn_edit = tk.Button(master, text="編集", font=("", 20), bd=3, bg="orange")
+
+    def EditProduct(self, event):
+        S.EntProductName.insert(0, self.name.get())
+        S.EntProductPrice.insert(0, self.price.get())
+        S.ProductIntax.set(self.bool_inTax)
+        S.ProductRedtax.set(self.bool_redTax)
+        S.editId = self.id
+    

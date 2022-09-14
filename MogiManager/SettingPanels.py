@@ -4,6 +4,7 @@ import DAO_SQLite3 as D
 import DAO_VARIABLE as V
 
 master = tk.Toplevel()
+master.resizable(False, False)
 master.withdraw()
 
 temp: tk.Label
@@ -61,6 +62,21 @@ def AddProduct():
     msg.showinfo("", "登録しました")
     CloseWindow()
 
+editId = 0
+def EditProduct():
+    dao = D.Dao()
+    item = V.item()
+    item.id = editId
+    item.name = EntProductName.get()
+    item.price = EntProductPrice.get()
+    item.inTax = ProductIntax.get()
+    item.reduceTax = ProductRedtax.get()
+    item.stocks = "empty"
+
+    dao.UpdateItem(item)
+    msg.showinfo("", "更新しました")
+    CloseWindow()
+
 # system
 def CloseWindow():
     global temp
@@ -68,6 +84,5 @@ def CloseWindow():
     master.withdraw()
 
 BtnProductCancel.config(command=CloseWindow)
-BtnProductApply.config(command=AddProduct)
 
 master.protocol("WM_DELETE_WINDOW", CloseWindow)

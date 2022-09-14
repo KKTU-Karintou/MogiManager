@@ -65,13 +65,16 @@ def RefreshTable():
     items = o.FindAllItems()
     for i in range(len(items)):
         item = R.ProductSet(FrmContents)
+        item.id = items[i].id
         item.name.set(items[i].name)
         item.price.set(items[i].price)
-        if(items[i].inTax==1):
+        item.bool_inTax = items[i].inTax
+        if(items[i].inTax):
             item.inTax.set("はい")
         else:
             item.inTax.set("いいえ")
-        if(items[i].reduceTax==1):
+        item.bool_redTax = items[i].reduceTax
+        if(items[i].reduceTax):
             item.redTax.set("はい")
         else:
             item.redTax.set("いいえ")
@@ -84,16 +87,19 @@ def RefreshTable():
         row_data[i].lbl_inTax.place(y=BaseY+SpanY*i-50, x=BaseX+450, anchor="c")
         row_data[i].lbl_redTax.place(y=BaseY+SpanY*i-50, x=BaseX+575, anchor="c")
         row_data[i].btn_edit.place(y=BaseY+SpanY*i-50, x=BaseX+700, anchor="c")
+        row_data[i].btn_edit.bind("<Button-1>", row_data[i].EditProduct)
+        row_data[i].btn_edit.bind("<Button-1>", EditProduct, "+")
 
         FrmMenus.config(height=BaseY+SpanY*i)
         FrmContents.config(height=BaseY+SpanY*i)
 
 
-def Product():
+def AddProduct():
     S.initWindow()
+    S.BtnProductApply.config(command=S.AddProduct, text="登録")
     S.master.geometry("500x600")
     S.master.deiconify()
-    S.FrmProduct.place(y=0, x=0)
+    S.FrmProduct.place(y=0, x=0, width=500, height=600)
     S.master.grab_set()
     S.master.focus_set()
     S.master.transient(FrmSetProduct)
@@ -105,9 +111,27 @@ def Product():
     S.ProductRedtax.set(False)
     RefreshTable()
     S.master.grab_release()
-    
 
-BtnAddProduct = tk.Button(FrmSetProduct, text="商品追加", command=Product, font=("", 35), bg="orange")
+def EditProduct(event):
+    print("OPEN EDIT PRODUCT")
+    S.initWindow()
+    S.BtnProductApply.config(command=lambda:S.EditProduct(), text="更新")
+    S.master.geometry("500x600")
+    S.master.deiconify()
+    S.FrmProduct.place(y=0, x=0, width=500, height=600)
+    S.master.grab_set()
+    S.master.focus_set()
+    S.master.transient(FrmSetProduct)
+    master.wait_window(S.temp)
+    S.FrmProduct.place_forget()
+    S.EntProductName.delete(0, tk.END)
+    S.EntProductPrice.delete(0, tk.END)
+    S.ProductIntax.set(False)
+    S.ProductRedtax.set(False)
+    RefreshTable()
+    S.master.grab_release()
+
+BtnAddProduct = tk.Button(FrmSetProduct, text="商品追加", command=AddProduct, font=("", 35), bg="orange")
 BtnAddProduct.place(y=500, x=1030)
 
 

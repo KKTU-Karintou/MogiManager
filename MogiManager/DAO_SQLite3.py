@@ -73,8 +73,14 @@ class Dao():
             d.id = data[0]
             d.name = data[1]
             d.price = data[2]
-            d.inTax = data[3]
-            d.reduceTax = data[4]
+            if(data[3]==1):
+                d.inTax = True
+            else:
+                d.inTax = False
+            if(data[4]==1):
+                d.reduceTax = True
+            else:
+                d.reduceTax = False
             d.stocks = data[5]
 
             ret.append(d)
@@ -95,8 +101,14 @@ class Dao():
             ret.id = data[0]
             ret.name = data[1]
             ret.price = data[2]
-            ret.inTax = data[3]
-            ret.reduceTax = data[4]
+            if(data[3]==1):
+                data.inTax = True
+            else:
+                data.inTax = False
+            if(data[4]==1):
+                data.reduceTax = True
+            else:
+                data.reduceTax = False
             ret.stocks = data[5]
             
             return ret

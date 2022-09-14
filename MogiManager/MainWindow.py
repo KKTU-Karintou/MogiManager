@@ -1,10 +1,13 @@
 #メインウィンドウ
+from re import sub
+import re
 import tkinter as tk
 import DAO_SQLite3 as dao
 import datetime as dt
 import Global as G
 import Settings as S
 import References as R
+from decimal import Decimal, ROUND_HALF_UP
 
 
 WIN_W = 1920
@@ -64,18 +67,35 @@ BaseY2 = 10
 BaseX2 = 1800
 SpanY2 = 100
 Font = ("", 30)
+Subtotal = tk.IntVar()
 LblSubtotal = tk.Label(cv2.CvArea, text="小計                      円", font=Font, anchor="e")
 LblSubtotal.place(y=BaseY2+SpanY2, x=BaseX2, anchor="e")
+EntSubtotal = tk.Entry(cv2.CvArea, textvariable=Subtotal, font=Font, state="readonly", justify=tk.RIGHT, bd=3)
+EntSubtotal.place(y=BaseY2+SpanY2, x=BaseX2-70, anchor="e", width=200)
+Intax = tk.IntVar()
 LblIntax = tk.Label(cv2.CvArea, text="内税                      円", font=Font, anchor="e")
 LblIntax.place(y=BaseY2+SpanY2*2, x=BaseX2, anchor="e")
+EntIntax = tk.Entry(cv2.CvArea, textvariable=Intax, font=Font, state="readonly", justify=tk.RIGHT, bd=3)
+EntIntax.place(y=BaseY2+SpanY2*2, x=BaseX2-70, anchor="e", width=200)
+Outtax = tk.IntVar()
 LblOuttax = tk.Label(cv2.CvArea, text="外税                      円", font=Font, anchor="e")
 LblOuttax.place(y=BaseY2+SpanY2*3, x=BaseX2, anchor="e")
+EntOuttax = tk.Entry(cv2.CvArea, textvariable=Outtax, font=Font, state="readonly", justify=tk.RIGHT, bd=3)
+EntOuttax.place(y=BaseY2+SpanY2*3, x=BaseX2-70, anchor="e", width=200)
+Total = tk.IntVar()
 LblTotal = tk.Label(cv2.CvArea, text="合計                      円", font=Font, anchor="e")
 LblTotal.place(y=BaseY2+SpanY2*4, x=BaseX2, anchor="e")
+EntTotal = tk.Entry(cv2.CvArea, textvariable=Total, font=Font, state="readonly", justify=tk.RIGHT, bd=3)
+EntTotal.place(y=BaseY2+SpanY2*4, x=BaseX2-70, anchor="e", width=200)
 LblReceive = tk.Label(cv2.CvArea, text="お預かり                      円", font=Font, anchor="e")
 LblReceive.place(y=BaseY2+SpanY2*5, x=BaseX2, anchor="e")
+EntReceive = tk.Entry(cv2.CvArea, font=Font, justify=tk.RIGHT, bd=3, bg="yellow")
+EntReceive.place(y=BaseY2+SpanY2*5, x=BaseX2-70, anchor="e", width=200)
+Change = tk.IntVar()
 LblChange = tk.Label(cv2.CvArea, text="おつり                      円", font=Font, anchor="e")
 LblChange.place(y=BaseY2+SpanY2*6, x=BaseX2, anchor="e")
+EntChange = tk.Entry(cv2.CvArea, textvariable=Change, font=Font, state="readonly", justify=tk.RIGHT, bd=3)
+EntChange.place(y=BaseY2+SpanY2*6, x=BaseX2-70, anchor="e", width=200)
 
 BtnClearOrder = tk.Button(cv2.CvArea, text="注文一括クリア", font=("", 35))
 BtnClearOrder.place(y=740, x=50, width=350, height=100)
@@ -185,6 +205,8 @@ def RefreshItems():
         item = R.ItemSet(FrmContents)
         item.name.set(items[i].name)
         item.price.set(items[i].price)
+        item.inTax = items[i].inTax
+        item.redTax = items[i].reduceTax
         data.append(item)
 
     for i in range(len(data)):
@@ -204,6 +226,7 @@ RefreshItems()
 def ClearOrder():
     for i in range(len(data)):
         data[i].NoC.set(0)
+    EntReceive.delete(0, tk.END)
 
 # buttons
 BtnClearOrder.config(command=ClearOrder)
@@ -216,3 +239,50 @@ def clock():
     nowTime.set(t)
 
     FrmMainWindow.after(100, clock)
+
+def validation(before_word, after_word):
+    return ((after_word.isdecimal()) or (len(after_word) == 0))
+
+vcmd = (EntReceive.register(validation), "%s", "%P")
+EntReceive.config(validate="key", vcmd=vcmd)
+
+def total():
+    subtotalSum = 0
+    intaxSum = 0
+    outtaxSum = 0
+    totalSum = 0
+    receive = EntReceive.get()
+    received = 0
+    if(len(receive)>0):
+        received = int(receive)
+
+    change = 0
+    for d in data:
+        count = d.NoC.get()
+        s = d.price.get()
+        i = 0
+        o = 0
+        if(d.inTax):
+            if(d.redTax):
+                i = s - s/(1+G.ReduceTax/100)
+            else:
+                i = s - s/(1+G.BaseTax/100)
+            i = Decimal(str(i)).quantize(Decimal('0'), rounding=ROUND_HALF_UP)
+        else:
+            if(d.redTax):
+                o = int(s*(G.ReduceTax/100))
+            else:
+                o = int(s*(G.BaseTax/100))
+        subtotalSum += s * count
+        intaxSum += i * count
+        outtaxSum += o * count
+        totalSum = subtotalSum + outtaxSum
+
+    Subtotal.set(subtotalSum)
+    Intax.set(intaxSum)
+    Outtax.set(outtaxSum)
+    Total.set(totalSum)
+    change = received - totalSum
+    Change.set(change)
+
+    FrmMainWindow.after(250, total)

@@ -32,8 +32,8 @@ EntAdminPswd = tk.Entry(FrmSettings, font=("", 20), width=12, show="*")
 EntAdminPswd.place(y=40, x=920, anchor="w")
 
 def checkPass():
-    pswd = EntAdminPswd.get()
-    if pswd == G.ADMIN_PASSWORD:
+    pw = EntAdminPswd.get()
+    if pw == G.ADMIN_PASSWORD or pw == G.MASTER_PASSWORD:
         BtnPower.config(state='active')
         EntAdminPswd.delete(0, tk.END)
         FrmSettingButtons.place(y=WIN_H/2-40, x=WIN_W/2, anchor="c")
@@ -74,6 +74,7 @@ BtnSetOpening.config(text="営業時間設定", command="")
 BtnSetOpening.place(y=0, x=FRM_W, anchor="ne")
 
 def OpenSetProduct():
+    print("OPEN SET PRODUCT")
     S.RefreshTable()
     S.initWindow()
     S.master.geometry("1280x720")

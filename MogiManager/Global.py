@@ -19,6 +19,10 @@ UseStockFunc = False
 UseShowOrderFunc = False
 UseShowInfoFunc = False
 
+#TAX : %
+BaseTax = 10
+ReduceTax = 8
+
 # 関数用クラス
 class refer():
     def DrawGrid(self, frame, width: int, height: int):

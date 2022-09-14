@@ -47,7 +47,7 @@ EntPassword.place(y=335, x=450, anchor="w")
 
 def nextWindow():
     pw = EntPassword.get()
-    if pw==G.WAKEUP_PASSWORD:
+    if pw == G.WAKEUP_PASSWORD or pw == G.MASTER_PASSWORD:
         G.OpenDate = DeOpenDate.get_date()
         d_week = {'Sun': '日', 'Mon': '月', 'Tue': '火', 'Wed': '水',
                   'Thu': '木', 'Fri': '金', 'Sat': '土'}
@@ -63,7 +63,7 @@ def nextWindow():
 
         FrmWakeup.destroy()
         G.root.geometry("1920x1080")
-        if(monitor_height==1920 and monitor_width==1080):
+        if(monitor_width==1920 and monitor_height==1080):
             G.root.attributes('-fullscreen', True)
         M.FrmMainWindow.place(y=0, x=0)
     else:
@@ -83,4 +83,5 @@ BtnShutdown.place(y=10, x=950, anchor="ne")
 
 G.root.protocol("WM_DELETE_WINDOW", Shutdown)
 M.clock()
+M.total()
 G.root.mainloop()
