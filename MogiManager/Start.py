@@ -48,18 +48,17 @@ EntPassword.place(y=335, x=450, anchor="w")
 def nextWindow():
     pw = EntPassword.get()
     if pw == G.WAKEUP_PASSWORD or pw == G.MASTER_PASSWORD:
-        G.OpenDate = DeOpenDate.get_date()
+        date = DeOpenDate.get_date()
         d_week = {'Sun': '日', 'Mon': '月', 'Tue': '火', 'Wed': '水',
                   'Thu': '木', 'Fri': '金', 'Sat': '土'}
-        key = G.OpenDate.strftime('%a')
+        key = date.strftime('%a')
         w = d_week[key]
-        d = G.OpenDate.strftime('営業日：%Y年%m月%d日 ') + f'{w}'
-        e = G.OpenDate.strftime('%Y_%m_%d')
-        f = G.OpenDate.strftime('%Y')
-        G.OpenDate = d
+        d = date.strftime('営業日：%Y年%m月%d日 ') + f'{w}'
+        e = date.strftime('%Y_%m_%d')
+        f = date.strftime('%Y')
+        G.OpenDate.set(d)
         G.OpenDateStr = e
         G.OpenDateYear = f
-        M.openDate.set(d)
 
         FrmWakeup.destroy()
         G.root.geometry("1920x1080")

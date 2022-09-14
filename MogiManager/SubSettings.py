@@ -1,13 +1,14 @@
 import tkinter as tk
 import tkinter.messagebox as msg
+from parse import parse
 import References as R
+import Global as G
 import DAO_SQLite3 as Dao
 import SettingPanels as S
 
-master = tk.Toplevel(width=1280, height=720)
+master = tk.Toplevel()
 master.title("詳細設定")
-master.minsize(width=1280, height=720)
-master.maxsize(width=1280, height=720)
+master.resizable(False, False)
 master.withdraw()
 
 temp: tk.Label
@@ -20,7 +21,48 @@ def CloseWindow():
     temp.destroy()
     master.withdraw()
 
-# 販売品目設定
+    # 営業時間設定
+FrmSetOpentime = tk.Frame(master, width=640, height=360)
+
+LblSOTitle = tk.Label(FrmSetOpentime, text="営業時間設定", font=("", 25))
+LblSOTitle.place(y=0, x=0)
+
+
+LblNowOpentime = tk.Label(FrmSetOpentime, text="現在の営業時間", font=("", 25))
+LblNowOpentime.place(y=100, x=75)
+LblChangeOpentime = tk.Label(FrmSetOpentime, text="変更後営業時間", font=("", 25), bg="blue")
+LblChangeOpentime.place(y=200, x=75, anchor="w")
+LblOpentimeBase = tk.Label(FrmSetOpentime, text="          ", font=("", 25), bg="green")
+LblOpentimeBase.place(y=200, x=330, width=100, height=40, anchor="w")
+EntOTHour = tk.Entry(FrmSetOpentime, font=("", 25), bd=0)
+EntOTHour.place(y=200, x=330, width=35, anchor="w")
+EntOTMin = tk.Entry(FrmSetOpentime, font=("", 25), bd=0)
+EntOTMin.place(y=200, x=370, width=35, anchor="w")
+LblClosetimeBase = tk.Label(FrmSetOpentime, text="          ", font=("", 25), bg="yellow")
+LblClosetimeBase.place(y=200, x=460, width=100, height=40, anchor="w")
+EntCTHour = tk.Entry(FrmSetOpentime, font=("", 25), bd=0)
+EntCTHour.place(y=200, x=460, width=35, anchor="w")
+EntCTMin = tk.Entry(FrmSetOpentime, font=("", 25), bd=0)
+EntCTMin.place(y=200, x=500, width=35, anchor="w")
+
+vcmd1 = (EntOTHour.register(R.validation), "%s", "%P")
+EntOTHour.config(validate="key", vcmd=vcmd1)
+vcmd2 = (EntOTMin.register(R.validation), "%s", "%P")
+EntOTMin.config(validate="key", vcmd=vcmd2)
+vcmd3 = (EntCTHour.register(R.validation), "%s", "%P")
+EntCTHour.config(validate="key", vcmd=vcmd3)
+vcmd4 = (EntCTMin.register(R.validation), "%s", "%P")
+EntCTMin.config(validate="key", vcmd=vcmd4)
+
+def InitSetOpentime():
+    OT = G.OpenTime.get()
+    CT = G.CloseTime.get()
+    OT = parse("営業開始 : {}時{}分", OT).fixed
+    CT = parse("営業終了 : {}時{}分", CT).fixed
+    Text = "現在の営業時間  " + OT[0] + ":" + OT[1] + " → " + CT[0]+ ":" + CT[1]
+    LblNowOpentime.config(text=Text)
+
+    # 販売品目設定
 FrmSetProduct = tk.Frame(master, width=1280, height=720)
 
 LblSPTitle = tk.Label(FrmSetProduct, text="販売品目設定", font=("", 30))

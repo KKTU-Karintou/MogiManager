@@ -10,8 +10,7 @@ WIN_SIZE = "1280x720"
 master = tk.Toplevel(width=WIN_W, height=WIN_H)
 master.title("システム設定")
 master.geometry(WIN_SIZE)
-master.maxsize(WIN_W, WIN_H)
-master.minsize(WIN_W, WIN_H)
+master.resizable(False, False)
 master.withdraw()
 
 temp: tk.Label
@@ -53,7 +52,7 @@ pwr = pwr.subsample(60, 60)
 BtnPower = tk.Button(FrmSettings, image=pwr, command=Shutdown, bg="green", width=60, height=60, state='disabled')
 BtnPower.place(y=10, x=1270, anchor="ne")
 
-# items of setting buttons
+# setting buttons
 FRM_W = 950
 FRM_H = 430
 FrmSettingButtons = tk.Frame(FrmSettings, width=FRM_W, height=FRM_H)
@@ -69,21 +68,36 @@ BtnSetFunctions = common()
 BtnSetFunctions.config(text="機能利用設定", command="")
 BtnSetFunctions.place(y=0, x=FRM_W/2, anchor="n")
 
-BtnSetOpening = common()
-BtnSetOpening.config(text="営業時間設定", command="")
-BtnSetOpening.place(y=0, x=FRM_W, anchor="ne")
-
-def OpenSetProduct():
-    print("OPEN SET PRODUCT")
-    S.RefreshTable()
+    #営業時間設定
+def OpenSetOpentime():
     S.initWindow()
-    S.master.geometry("1280x720")
-    S.FrmSetProduct.place(y=0, x=0)
+    S.master.geometry("640x360")
+    S.InitSetOpentime()
+    S.FrmSetOpentime.place(y=0, x=0, width=640, height=360)
     S.master.grab_set()
     S.master.focus_set()
     S.master.transient(master)
     S.master.deiconify()
     master.wait_window(S.temp)
+    S.FrmSetOpentime.place_forget()
+    S.master.grab_release()
+
+BtnSetOpening = common()
+BtnSetOpening.config(text="営業時間設定", command=OpenSetOpentime)
+BtnSetOpening.place(y=0, x=FRM_W, anchor="ne")
+
+    #販売品目設定
+def OpenSetProduct():
+    S.RefreshTable()
+    S.initWindow()
+    S.master.geometry("1280x720")
+    S.FrmSetProduct.place(y=0, x=0, width=1280, height=720)
+    S.master.grab_set()
+    S.master.focus_set()
+    S.master.transient(master)
+    S.master.deiconify()
+    master.wait_window(S.temp)
+    S.FrmSetProduct.place_forget()
     S.master.grab_release()
 
 BtnSetItems = common()

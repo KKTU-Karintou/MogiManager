@@ -25,14 +25,17 @@ FrmMainWindow = tk.Frame(G.root, width=WIN_W, height=WIN_H)
 cv = G.refer()
 cv.DrawGrid(FrmMainWindow, WIN_W, WIN_H)
 
-
-openDate = tk.StringVar()
-LblOpenDate = tk.Label(cv.CvArea, textvariable=openDate, font=("", 28), bd=3, relief=tk.SOLID)
+LblOpenDate = tk.Label(cv.CvArea, textvariable=G.OpenDate, font=("", 28), bd=3, relief=tk.SOLID)
 LblOpenDate.place(y=20, x=20, width=460, height=60)
 
-nowTime = tk.StringVar()
-LblNowTime = tk.Label(cv.CvArea, textvariable=nowTime, font=("", 55), bd=3, relief=tk.SOLID)
+LblNowTime = tk.Label(cv.CvArea, textvariable=G.NowTime, font=("", 55), bd=3, relief=tk.SOLID)
 LblNowTime.place(y=20, x=WIN_W/2, anchor=tk.N, width=320, height=100)
+
+
+LblOpenTime = tk.Label(cv.CvArea, textvariable=G.OpenTime, font=("", 25), bd=3, relief=tk.SOLID)
+LblOpenTime.place(y=20, x=1160, width=320, height=45)
+LblCloseTime = tk.Label(cv.CvArea, textvariable=G.CloseTime, font=("", 25), bd=3, relief=tk.SOLID)
+LblCloseTime.place(y=75, x=1160, width=320, height=45)
 
 ### 注文タブ        Orders
 # cv2.CvArea -> FrmOrderTab
@@ -235,15 +238,11 @@ BtnClearOrder.config(command=ClearOrder)
 def clock():
     n = dt.datetime.now()
     t = n.strftime('%H時%M分')
-    G.NowTime = t
-    nowTime.set(t)
+    G.NowTime.set(t)
 
     FrmMainWindow.after(100, clock)
 
-def validation(before_word, after_word):
-    return ((after_word.isdecimal()) or (len(after_word) == 0))
-
-vcmd = (EntReceive.register(validation), "%s", "%P")
+vcmd = (EntReceive.register(R.validation), "%s", "%P")
 EntReceive.config(validate="key", vcmd=vcmd)
 
 def total():

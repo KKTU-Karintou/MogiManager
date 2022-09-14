@@ -2,18 +2,23 @@ import tkinter as tk
 
 # ルートウィンドウ
 root = tk.Tk()
+root.resizable(False, False)
 
 # グローバル変数
 OpenDateYear = '2022'
 OpenDateStr = '2022_01_01'
-OpenDate = '2022年01月01日 (月)'
-NowTime = '00時00分'
+OpenDate = tk.StringVar(value='2022年01月01日 (月)')
+NowTime = tk.StringVar(value='00時00分')
+OpenTime = tk.StringVar(value='営業開始 : 09時00分')
+CloseTime = tk.StringVar(value='営業終了 : 16時00分')
 
+### システム設定用
+#Password
 MASTER_PASSWORD = "#MASTER"
 WAKEUP_PASSWORD = ""
 ADMIN_PASSWORD = ""
 
-# システム設定用
+#Function : True / False
 UseReferenceFunc = False
 UseStockFunc = False
 UseShowOrderFunc = False
@@ -22,6 +27,7 @@ UseShowInfoFunc = False
 #TAX : %
 BaseTax = 10
 ReduceTax = 8
+
 
 # 関数用クラス
 class refer():

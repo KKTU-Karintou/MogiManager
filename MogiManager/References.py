@@ -3,6 +3,10 @@ import tkinter.ttk as ttk
 import Global as G
 import SettingPanels as S
 
+# 入力規制：数字のみ
+def validation(before_word, after_word):
+    return ((after_word.isdecimal()) or (len(after_word) == 0))
+
 class ScrollableFrame(ttk.Frame):
     def __init__(self, container, bar_x = True, bar_y = True):
         super().__init__(container)
