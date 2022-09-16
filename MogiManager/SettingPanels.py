@@ -1,19 +1,22 @@
 import tkinter as tk
 import tkinter.messagebox as msg
+import Global as G
 import DAO_SQLite3 as D
 import DAO_VARIABLE as V
 
+# ベースウィンドウ準備
 master = tk.Toplevel()
 master.resizable(False, False)
 master.withdraw()
+master.deiconify()
+master.withdraw()
 
-temp: tk.Label
-def initWindow():
-    global temp
-    temp = tk.Label(master)
+# データベースアクセスオブジェクト
+o = D.Dao()
 
-# 販売品目設定：商品追加/編集
-FrmProduct = tk.Frame(master, width=500, height=600)
+
+    ### 販売品目設定：商品追加/編集/削除 ###
+FrmProduct = tk.Frame(master, width=500, height=600, bg="yellow green")
 
 LblProductTitle = tk.Label(FrmProduct, text="商品追加", font=("", 25))
 LblProductTitle.place(y=20, x=250, anchor="c")
@@ -48,9 +51,8 @@ BtnProductApply.place(y=500, x=400)
 BtnProductCancel = tk.Button(FrmProduct, text="キャンセル", font=("", 25), bg="blue")
 BtnProductCancel.place(y=500, x=200)
 
-# commands
+# コールバック
 def AddProduct():
-    dao = D.Dao()
     item = V.item()
     item.name = EntProductName.get()
     item.price = EntProductPrice.get()
@@ -58,31 +60,40 @@ def AddProduct():
     item.reduceTax = ProductRedtax.get()
     item.stocks = "empty"
 
-    dao.AddItem(item)
+    o.AddItem(item)
     msg.showinfo("", "登録しました")
+    G.UpdateItemList = True
     CloseWindow()
 
-editId = 0
-def EditProduct():
-    dao = D.Dao()
+def ApplyProduct():
     item = V.item()
-    item.id = editId
+    item.id = G.ProductEditId
     item.name = EntProductName.get()
     item.price = EntProductPrice.get()
     item.inTax = ProductIntax.get()
     item.reduceTax = ProductRedtax.get()
     item.stocks = "empty"
 
-    dao.UpdateItem(item)
+    o.UpdateItem(item)
+    G.UpdateItemList = True
     msg.showinfo("", "更新しました")
     CloseWindow()
 
-# system
-def CloseWindow():
+# モーダルウィンドウ疑似実装
+    ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
+    ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
+    ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
+temp: tk.Label
+def initWindow():
     global temp
+    temp = tk.Label(master)
+
+def CloseWindow():
     temp.destroy()
     master.withdraw()
 
+# 各フレーム内閉じるボタンのコールバック設定
 BtnProductCancel.config(command=CloseWindow)
 
+# ×ボタンにコールバックを設定
 master.protocol("WM_DELETE_WINDOW", CloseWindow)

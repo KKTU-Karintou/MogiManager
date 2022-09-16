@@ -62,7 +62,7 @@ LblItemName.place(y=30, x=BaseX, anchor="c")
 LblItemPrice = tk.Label(FrmOrderHeafer, text="価格", font=("", 25))
 LblItemPrice.place(y=30, x=BaseX+300, anchor="c")
 LblItemCount = tk.Label(FrmOrderHeafer, text="数量", font=("", 25))
-LblItemCount.place(y=30, x=BaseX+475, anchor="c")
+LblItemCount.place(y=30, x=BaseX+500, anchor="c")
 LblItemStock = tk.Label(FrmOrderHeafer, text="在庫数", font=("", 25))
 LblItemStock.place(y=30, x=BaseX+680, anchor="c")
 
@@ -172,7 +172,7 @@ def TabButtonChange(this: int):
             BtnTab[i].config(bg="blue", fg="white", font=("", 28, "normal"))
 
 
-# settings
+# 設定画面表示
 def OpenSettings():
     S.initWindow()
     S.master.grab_set()
@@ -180,9 +180,11 @@ def OpenSettings():
     S.master.transient(G.root)
     S.master.deiconify()
     G.root.wait_window(S.temp)
-    if G.root!=None:
+    if(G.root!=None):
         S.master.grab_release()
-    RefreshItems()
+    if(G.UpdateItemList):
+        RefreshItems()
+        G.UpdateItemList
 
 BtnSettings = tk.Button(cv.CvArea, command=OpenSettings, text="🔑", font=("", 30), bg="orange", width=5, height=1)
 BtnSettings.place(y=10, x=WIN_W-10, anchor="ne")
@@ -215,9 +217,9 @@ def RefreshItems():
     for i in range(len(data)):
         data[i].lbl_name.place(y=BaseY+SpanY*i-60, x=BaseX, anchor="c")
         data[i].lbl_price.place(y=BaseY+SpanY*i-60, x=BaseX+300, anchor="c")
-        data[i].btn_countdown.place(y=BaseY+SpanY*i-60, x=BaseX+450, anchor="e")
-        data[i].lbl_count.place(y=BaseY+SpanY*i-60, x=BaseX+475, anchor="c")
-        data[i].btn_countup.place(y=BaseY+SpanY*i-60, x=BaseX+500, anchor="w")
+        data[i].btn_countdown.place(y=BaseY+SpanY*i-60, x=BaseX+475, width=70, height=50, anchor="e")
+        data[i].lbl_count.place(y=BaseY+SpanY*i-60, x=BaseX+500, anchor="c")
+        data[i].btn_countup.place(y=BaseY+SpanY*i-60, x=BaseX+525, width=70, height=50, anchor="w")
         data[i].lbl_stock.place(y=BaseY+SpanY*i-60, x=BaseX+680, anchor="c")
 
         FrmMenus.config(height=BaseY+SpanY*i-20)

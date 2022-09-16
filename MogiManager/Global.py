@@ -12,11 +12,16 @@ NowTime = tk.StringVar(value='00時00分')
 OpenTime = tk.StringVar(value='営業開始 : 09時00分')
 CloseTime = tk.StringVar(value='営業終了 : 16時00分')
 
+ProductEditId = 0
+
+# 状態フラグ
+UpdateItemList = False
+
 ### システム設定用
 #Password
 MASTER_PASSWORD = "#MASTER"
-WAKEUP_PASSWORD = ""
-ADMIN_PASSWORD = ""
+WAKEUP_PASSWORD = ''
+ADMIN_PASSWORD = ''
 
 #Function : True / False
 UseReferenceFunc = False

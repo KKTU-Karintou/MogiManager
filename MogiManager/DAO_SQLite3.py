@@ -102,13 +102,13 @@ class Dao():
             ret.name = data[1]
             ret.price = data[2]
             if(data[3]==1):
-                data.inTax = True
+                ret.inTax = True
             else:
-                data.inTax = False
+                ret.inTax = False
             if(data[4]==1):
-                data.reduceTax = True
+                ret.reduceTax = True
             else:
-                data.reduceTax = False
+                ret.reduceTax = False
             ret.stocks = data[5]
             
             return ret

@@ -7,6 +7,13 @@ import tkinter.messagebox as msg
 import Global as G
 import MainWindow as M
 
+import os
+
+filename = open("file_name.txt", "w")
+filename.write("my text")
+filename.close()
+os.system("attrib +r file_name.txt")
+
 G.root.title("模擬店マネージャー ver.1.0.0a")
 G.root.geometry("960x540")
 G.root.maxsize(width=1920, height=1080)

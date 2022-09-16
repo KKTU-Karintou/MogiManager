@@ -3,9 +3,14 @@ import tkinter.ttk as ttk
 import Global as G
 import SettingPanels as S
 
-# 入力規制：数字のみ
+# 入力規制
+    ### 数字のみ
 def validation(before_word, after_word):
     return ((after_word.isdecimal()) or (len(after_word) == 0))
+
+    ### 数字2桁まで
+def validation2num(word):
+    return ((word.isdecimal() and len(word) <= 2) or len(word) == 0)
 
 class ScrollableFrame(ttk.Frame):
     def __init__(self, container, bar_x = True, bar_y = True):
@@ -47,10 +52,10 @@ class ItemSet(tk.Frame):
         self.lbl_name = tk.Label(master, textvariable=self.name, font=("", 25), width=20, bd=3)
         self.price = tk.IntVar()
         self.lbl_price = tk.Label(master, textvariable=self.price, font=("", 25), width=8, bd=3)
-        self.btn_countdown = tk.Button(master, text="-", font=("", 25), bd=3, bg="orange")
+        self.btn_countdown = tk.Button(master, text="−", font=("", 25, "bold"), bd=3, bg="orange", repeatdelay=5000, repeatinterval=100)
         self.NoC = tk.IntVar()
         self.lbl_count = tk.Label(master, textvariable=self.NoC, font=("", 25), bd=3)
-        self.btn_countup = tk.Button(master, text="+", font=("", 25), bd=3, bg="aqua")
+        self.btn_countup = tk.Button(master, text="＋", font=("", 25, "bold"), bd=3, bg="aqua", repeatdelay=5000, repeatinterval=100)
         self.NoS = tk.IntVar()
         self.lbl_stock = tk.Label(master, textvariable=self.NoS, font=("", 25), bd=3)
         self.inTax = False
@@ -63,7 +68,7 @@ class ItemSet(tk.Frame):
 
         def countUp():
             n = self.NoC.get()
-            if(n<100):
+            if(n<99):
                 self.NoC.set(n+1)
 
         self.btn_countdown.config(command=countDown)
@@ -84,10 +89,5 @@ class ProductSet(tk.Frame):
         self.lbl_redTax = tk.Label(master, textvariable=self.redTax, font=("", 25), bd=3)
         self.btn_edit = tk.Button(master, text="編集", font=("", 20), bd=3, bg="orange")
 
-    def EditProduct(self, event):
-        S.EntProductName.insert(0, self.name.get())
-        S.EntProductPrice.insert(0, self.price.get())
-        S.ProductIntax.set(self.bool_inTax)
-        S.ProductRedtax.set(self.bool_redTax)
-        S.editId = self.id
-    
+    def PrepareEditProduct(self, event):
+        G.ProductEditId = self.id
