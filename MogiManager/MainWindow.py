@@ -184,7 +184,7 @@ def OpenSettings():
         S.master.grab_release()
     if(G.UpdateItemList):
         RefreshItems()
-        G.UpdateItemList
+        G.UpdateItemList = False
 
 BtnSettings = tk.Button(cv.CvArea, command=OpenSettings, text="🔑", font=("", 30), bg="orange", width=5, height=1)
 BtnSettings.place(y=10, x=WIN_W-10, anchor="ne")

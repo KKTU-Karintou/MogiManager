@@ -109,6 +109,57 @@ FrmSetProduct = tk.Frame(master, width=1280, height=720)
 LblSPTitle = tk.Label(FrmSetProduct, text="販売品目設定", font=("", 30))
 LblSPTitle.place(y=0, x=0)
 
+# 税率設定用フレーム
+FrmProductTax = tk.Frame(FrmSetProduct, width=240, height=270, bd=3, relief=tk.SOLID)
+FrmProductTax.place(y=10, x=1270, anchor="ne")
+
+# 税率設定コンテンツ
+LblSetProductTax = tk.Label(FrmProductTax, text="税率設定", font=("", 27))
+LblSetProductTax.place(y=10, x=120, anchor="n")
+LblProductBaseTax = tk.Label(FrmProductTax, text="税率      %", font=("", 25))
+LblProductBaseTax.place(y=100, x=220, anchor="e")
+EntProductBaseTax = tk.Entry(FrmProductTax, font=("", 25), justify=tk.CENTER, state="readonly")
+EntProductBaseTax.place(y=100, x=190, width=40, anchor="e")
+LblNowProductBaseTax = tk.Label(FrmProductTax, font=("", 25))
+LblNowProductBaseTax.place(y=100, x=190, width=40, anchor="e")
+LblProductRedTax = tk.Label(FrmProductTax, text="軽減税率      %", font=("", 25))
+LblProductRedTax.place(y=150, x=220, anchor="e")
+EntProductRedTax = tk.Entry(FrmProductTax, font=("", 25), justify=tk.CENTER, state="readonly")
+EntProductRedTax.place(y=150, x=190, width=40, anchor="e")
+LblNowProductRedTax = tk.Label(FrmProductTax, font=("", 25))
+LblNowProductRedTax.place(y=150, x=190, width=40, anchor="e")
+BtnSetProductTax = tk.Button(FrmProductTax, text="税率変更", font=("", 25), bg="orange")
+BtnSetProductTax.place(y=200, x=120, width=200, height=60, anchor="n")
+
+# 入力規制用(数字2桁まで受け付ける)
+vcmd5 = (EntProductBaseTax.register(R.validation2num), "%P")
+EntProductBaseTax.config(validate="key", vcmd=vcmd5)
+vcmd6 = (EntProductRedTax.register(R.validation2num), "%P")
+EntProductRedTax.config(validate="key", vcmd=vcmd6)
+
+def EditTaxRate():
+    EntProductBaseTax.config(state="normal")
+    EntProductBaseTax.lift()
+    EntProductRedTax.config(state="normal")
+    EntProductRedTax.lift()
+    BtnSetProductTax.config(text="適用", command=ApplyTaxRate)
+
+def ApplyTaxRate():
+    bt = EntProductBaseTax.get()
+    rt = EntProductRedTax.get()
+    if(len(bt)>0 and len(rt)>0):
+        EntProductBaseTax.config(state="readonly")
+        EntProductRedTax.config(state="readonly")
+        G.BaseTax = int(bt)
+        G.ReduceTax = int(rt)
+        BtnSetProductTax.config(text="税率変更", command=EditTaxRate)
+        LblNowProductBaseTax.config(text=G.BaseTax)
+        LblNowProductBaseTax.lift()
+        LblNowProductRedTax.config(text=G.ReduceTax)
+        LblNowProductRedTax.lift()
+    else:
+        msg.showwarning("", "有効な値を入力してください")
+
 # 一覧用ヘッダーフレーム
 FrmProductHeader = tk.Frame(FrmSetProduct, width=1000, height=60, bg="yellow green")
 FrmProductHeader.place(y=50, x=20)
@@ -205,10 +256,10 @@ def AddProduct():
     # 初期化/画面構成設定
     S.initWindow()
     S.master.geometry("500x600")
-    S.master.deiconify()
     S.master.transient(master)
     S.master.grab_set()
     S.master.focus_set()
+    S.master.deiconify()
 
     # コンテンツ設定
     S.LblProductTitle.config(text="商品追加")
@@ -240,6 +291,7 @@ def EditProduct(event):
     S.ProductIntax.set(data.inTax)
     S.ProductRedtax.set(data.reduceTax)
     S.FrmProduct.place(y=0, x=0, width=500, height=600)
+    S.BtnProductDelete.place(y=500, x=20)
 
     # 閉じられるまで待つ
     master.wait_window(S.temp)
@@ -254,6 +306,8 @@ BtnAddProduct.place(y=500, x=1030)
 BtnSPClose = tk.Button(FrmSetProduct, text="閉じる", command=CloseWindow, font=("", 35), bg="blue", fg="white")
 BtnSPClose.place(y=700, x=1260, anchor="se")
 
+# 各ボタンのコールバック設定
+BtnSetProductTax.config(command=EditTaxRate)
 
 # ×ボタンにコールバックを設定
 master.protocol("WM_DELETE_WINDOW", CloseWindow)

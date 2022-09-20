@@ -30,8 +30,8 @@ UseShowOrderFunc = False
 UseShowInfoFunc = False
 
 #TAX : %
-BaseTax = 10
-ReduceTax = 8
+BaseTax = int(10)
+ReduceTax = int(8)
 
 
 # 関数用クラス

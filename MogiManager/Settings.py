@@ -14,6 +14,28 @@ master.geometry(WIN_SIZE)
 master.resizable(False, False)
 master.withdraw()
 
+# モーダルウィンドウ疑似実装 ###
+    ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
+    ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
+    ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
+temp: tk.Label
+def initWindow():
+    global temp
+    temp = tk.Label(master)
+    BtnPower.config(state="disabled")
+    EntAdminPswd.config(state="normal")
+    BtnActivate.config(state="normal")
+
+def CloseWindow():
+    global temp
+    temp.destroy()
+    BtnPower.config(state="disabled")
+    EntAdminPswd.config(state="normal")
+    BtnActivate.config(state="normal")
+    EntAdminPswd.delete(0, tk.END)
+    FrmSettingButtons.place_forget()
+    master.withdraw()
+
 # 設定一覧用ベースフレーム
 FrmSettings = tk.Frame(master, width=WIN_W, height=WIN_H)
 FrmSettings.place(y=0, x=0)
@@ -34,7 +56,10 @@ def checkPass():
     if pw == G.ADMIN_PASSWORD or pw == G.MASTER_PASSWORD:
         BtnPower.config(state='active')
         EntAdminPswd.delete(0, tk.END)
+        EntAdminPswd.config(state="readonly")
+        BtnActivate.config(state="disabled")
         FrmSettingButtons.place(y=WIN_H/2-40, x=WIN_W/2, anchor="c")
+
     else:
         msg.showwarning("", "パスワードが間違っています")
 
@@ -98,15 +123,26 @@ BtnSetOpening.place(y=0, x=FRM_W, anchor="ne")
 
     ### 販売品目設定 ###
 def OpenSetProduct():
+    # 初期化/画面構成設定
     S.RefreshTable()
     S.initWindow()
     S.master.geometry("1280x720")
-    S.FrmSetProduct.place(y=0, x=0, width=1280, height=720)
     S.master.grab_set()
     S.master.focus_set()
     S.master.transient(master)
     S.master.deiconify()
+
+    # コンテンツ設定
+    S.FrmSetProduct.place(y=0, x=0, width=1280, height=720)
+    S.LblNowProductBaseTax.config(text=G.BaseTax)
+    S.LblNowProductBaseTax.lift()
+    S.LblNowProductRedTax.config(text=G.ReduceTax)
+    S.LblNowProductRedTax.lift()
+    
+    # 閉じられるまで待つ
     master.wait_window(S.temp)
+
+    # 初期化
     S.FrmSetProduct.place_forget()
     S.master.grab_release()
 
@@ -149,23 +185,6 @@ BtnSetInfoPictures.place(y=FRM_H, x=FRM_W, anchor="se")
 BtnSalesInfo = tk.Button(FrmSettings, text="売上データ", command="", font=("", 30), bg="blue", fg="white", width=20, height=2)
 BtnSalesInfo.place(y=620, x=WIN_W/2, anchor="c")
 
-
-# モーダルウィンドウ疑似実装 ###
-    ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
-    ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
-    ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
-temp: tk.Label
-def initWindow():
-    global temp
-    temp = tk.Label(master)
-
-def CloseWindow():
-    global temp
-    temp.destroy()
-    BtnPower.config(state='disabled')
-    EntAdminPswd.delete(0, tk.END)
-    FrmSettingButtons.place_forget()
-    master.withdraw()
 
 # 閉じるボタン
 BtnClose = tk.Button(FrmSettings, text="閉じる", command=CloseWindow, font=("", 30), bg="blue", fg="white", width=10, height=2)

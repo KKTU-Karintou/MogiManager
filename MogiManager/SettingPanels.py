@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.messagebox as msg
+from winreg import DeleteKey
 import Global as G
 import DAO_SQLite3 as D
 import DAO_VARIABLE as V
@@ -13,6 +14,21 @@ master.withdraw()
 
 # データベースアクセスオブジェクト
 o = D.Dao()
+
+# モーダルウィンドウ疑似実装
+    ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
+    ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
+    ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
+temp: tk.Label
+def initWindow():
+    global temp
+    temp = tk.Label(master)
+
+def CloseWindow():
+    global temp
+    temp.destroy()
+    temp = None
+    master.withdraw()
 
 
     ### 販売品目設定：商品追加/編集/削除 ###
@@ -50,6 +66,7 @@ BtnProductApply = tk.Button(FrmProduct, text="追加", font=("", 25), bg="blue")
 BtnProductApply.place(y=500, x=400)
 BtnProductCancel = tk.Button(FrmProduct, text="キャンセル", font=("", 25), bg="blue")
 BtnProductCancel.place(y=500, x=200)
+BtnProductDelete = tk.Button(FrmProduct, text="削除", font=("", 25), bg="blue")
 
 # コールバック
 def AddProduct():
@@ -79,21 +96,21 @@ def ApplyProduct():
     msg.showinfo("", "更新しました")
     CloseWindow()
 
-# モーダルウィンドウ疑似実装
-    ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
-    ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
-    ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
-temp: tk.Label
-def initWindow():
-    global temp
-    temp = tk.Label(master)
+def DeleteProduct():
+    sel = msg.askokcancel("", "削除すると過去の売上データで詳細を確認できなくなります。\nよろしいですか？")
+    if(sel):
+        id = G.ProductEditId
 
-def CloseWindow():
-    temp.destroy()
-    master.withdraw()
+        o.DeleteItem(id)
+        G.UpdateItemList = True
+        msg.showinfo("", "削除しました")
+        CloseWindow()
+        BtnProductDelete.place_forget()
 
-# 各フレーム内閉じるボタンのコールバック設定
+
+# 各ボタンのコールバック設定
 BtnProductCancel.config(command=CloseWindow)
+BtnProductDelete.config(command=DeleteProduct)
 
 # ×ボタンにコールバックを設定
 master.protocol("WM_DELETE_WINDOW", CloseWindow)
