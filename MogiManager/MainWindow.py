@@ -1,7 +1,6 @@
 #メインウィンドウ
-from re import sub
-import re
 import tkinter as tk
+from parse import parse
 import DAO_SQLite3 as dao
 import datetime as dt
 import Global as G
@@ -28,7 +27,7 @@ cv.DrawGrid(FrmMainWindow, WIN_W, WIN_H)
 LblOpenDate = tk.Label(cv.CvArea, textvariable=G.OpenDate, font=("", 28), bd=3, relief=tk.SOLID)
 LblOpenDate.place(y=20, x=20, width=460, height=60)
 
-LblNowTime = tk.Label(cv.CvArea, textvariable=G.NowTime, font=("", 55), bd=3, relief=tk.SOLID)
+LblNowTime = tk.Label(cv.CvArea, textvariable=G.NowTime, font=("", 55, "bold"), bd=3, relief=tk.SOLID)
 LblNowTime.place(y=20, x=WIN_W/2, anchor=tk.N, width=320, height=100)
 
 
@@ -242,7 +241,24 @@ def clock():
     t = n.strftime('%H時%M分')
     G.NowTime.set(t)
 
-    FrmMainWindow.after(100, clock)
+    OT = G.OpenTime.get()
+    CT = G.CloseTime.get()
+    OT = parse("営業開始 : {}時{}分", OT).fixed
+    CT = parse("営業終了 : {}時{}分", CT).fixed
+    OpenT = int(OT[0] + OT[1])
+    CloseT = int(CT[0] + CT[1])
+    nh = n.strftime('%H')
+    nm = n.strftime('%M')
+    NowT = int(nh + nm)
+
+    if(OpenT <= NowT and NowT < CloseT):
+        LblNowTime.config(fg="blue")
+    elif(NowT < OpenT):
+        LblNowTime.config(fg="orange")
+    else:
+        LblNowTime.config(fg="red")
+
+    FrmMainWindow.after(1000, clock)
 
 vcmd = (EntReceive.register(R.validation), "%s", "%P")
 EntReceive.config(validate="key", vcmd=vcmd)
@@ -286,4 +302,4 @@ def total():
     change = received - totalSum
     Change.set(change)
 
-    FrmMainWindow.after(250, total)
+    FrmMainWindow.after(100, total)
