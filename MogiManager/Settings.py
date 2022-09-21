@@ -86,37 +86,44 @@ FRM_H = 430
 FrmSettingButtons = tk.Frame(FrmSettings, width=FRM_W, height=FRM_H)
 
 # ボタンは文字とコールバック以外共通なのでまとめる
-def common():
+def CommonSettingButton():
     return tk.Button(FrmSettingButtons, font=("", 25), bg="blue", fg="white", bd=5, width=15, height=3)
 
 
     ### パスワード設定 ###
-BtnSetPasswords = common()
+BtnSetPasswords = CommonSettingButton()
 BtnSetPasswords.config(text="パスワード設定", command="")
 BtnSetPasswords.place(y=0, x=0, anchor="nw")
 
 
     ### 機能利用設定 ###
-BtnSetFunctions = common()
+BtnSetFunctions = CommonSettingButton()
 BtnSetFunctions.config(text="機能利用設定", command="")
 BtnSetFunctions.place(y=0, x=FRM_W/2, anchor="n")
 
 
     ### 営業時間設定 ###
 def OpenSetOpentime():
+    # 初期化/画面構成設定
     S.initWindow()
-    S.master.geometry("640x360")
     S.InitSetOpentime()
-    S.FrmSetOpentime.place(y=0, x=0, width=640, height=360)
+    S.master.geometry("640x360")
     S.master.grab_set()
     S.master.focus_set()
     S.master.transient(master)
     S.master.deiconify()
+
+    # コンテンツ設定
+    S.FrmSetOpentime.place(y=0, x=0, width=640, height=360)
+    
+    # 閉じられるまで待つ
     master.wait_window(S.temp)
+
+    # 初期化
     S.FrmSetOpentime.place_forget()
     S.master.grab_release()
 
-BtnSetOpening = common()
+BtnSetOpening = CommonSettingButton()
 BtnSetOpening.config(text="営業時間設定", command=OpenSetOpentime)
 BtnSetOpening.place(y=0, x=FRM_W, anchor="ne")
 
@@ -146,37 +153,37 @@ def OpenSetProduct():
     S.FrmSetProduct.place_forget()
     S.master.grab_release()
 
-BtnSetItems = common()
+BtnSetItems = CommonSettingButton()
 BtnSetItems.config(text="販売品目設定", command=OpenSetProduct)
 BtnSetItems.place(y=FRM_H/2, x=0, anchor="w")
 
 
     ### 在庫設定 ###
-BtnSetStocks = common()
+BtnSetStocks = CommonSettingButton()
 BtnSetStocks.config(text="在庫設定", command="")
 BtnSetStocks.place(y=FRM_H/2, x=FRM_W/2, anchor="c")
 
 
     ### シフト設定 ###
-BtnSetShifts = common()
+BtnSetShifts = CommonSettingButton()
 BtnSetShifts.config(text="シフト設定", command="")
 BtnSetShifts.place(y=FRM_H/2, x=FRM_W, anchor="e")
 
 
     ### 初期現金設定 ###
-BtnSetInitMoney = common()
+BtnSetInitMoney = CommonSettingButton()
 BtnSetInitMoney.config(text="初期現金設定", command="")
 BtnSetInitMoney.place(y=FRM_H, x=0, anchor="sw")
 
 
     ### 整理券設定 ###
-BtnSetRefTickets = common()
+BtnSetRefTickets = CommonSettingButton()
 BtnSetRefTickets.config(text="整理券設定", command="")
 BtnSetRefTickets.place(y=FRM_H, x=FRM_W/2, anchor="s")
 
 
     ### 掲示画像設定 ###
-BtnSetInfoPictures = common()
+BtnSetInfoPictures = CommonSettingButton()
 BtnSetInfoPictures.config(text="掲示画像設定", command="")
 BtnSetInfoPictures.place(y=FRM_H, x=FRM_W, anchor="se")
 
