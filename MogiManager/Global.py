@@ -29,10 +29,14 @@ UseStockFunc = False
 UseShowOrderFunc = False
 UseShowInfoFunc = False
 
-#TAX : %
+#Tax : %
 BaseTax = int(10)
 ReduceTax = int(8)
 
+#ReferenceNumber
+BEGIN_REFNUM = 1
+LIMIT_REFNUM = 99
+currentRefNum = 1
 
 # 関数用クラス
 class refer():
