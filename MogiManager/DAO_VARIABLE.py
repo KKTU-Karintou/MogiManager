@@ -16,6 +16,6 @@ class order():
         self.total: int
         self.inTax: int
         self.outTax: int
-        self.recieve: int
+        self.receive: int
         self.changes: int
         self.state: str

@@ -11,13 +11,28 @@ class Dao():
         self._file_name = G.OpenDateYear + "_Data.db"
         self.conn = SQL.connect(self._file_name)
 
-        self.ordersTable = "O" + G.OpenDateStr
+        self.productsTableName = "items"
+        self.ordersTableName = "O" + G.OpenDateStr
+
+    def BinToBool(num: int):
+        if(num==1):
+            return True
+        else:
+            return False
 
     # Products
     def CreatItemsTable(self):
         cur = self.conn.cursor()
 
-        query = '''CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT, price INTEGER, inTax BLOB, redTax BLOB, stock TEXT)'''
+        query = "CREATE TABLE IF NOT EXISTS "\
+                + self.productsTableName + "("\
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "\
+                "item TEXT, "\
+                "price INTEGER, "\
+                "inTax BLOB, "\
+                "redTax BLOB, "\
+                "stock TEXT"\
+                ")"
 
         cur.execute(query)
         self.conn.commit()
@@ -25,7 +40,7 @@ class Dao():
     def DropItemsTable(self):
         cur = self.conn.cursor()
 
-        query = '''DROP TABLE IF EXISTS items'''
+        query = "DROP TABLE IF EXISTS " + self.productsTableName
 
         cur.execute(query)
         self.conn.commit()
@@ -36,7 +51,14 @@ class Dao():
         cur = self.conn.cursor()
 
         data = (identity.name, identity.price, identity.inTax, identity.reduceTax, identity.stocks)
-        query = "INSERT INTO items (item, price, inTax, redTax, stock) VALUES (?, ?, ?, ?, ?)"
+        query = "INSERT INTO "\
+                + self.productsTableName + "("\
+                "item, "\
+                "price, "\
+                "inTax, "\
+                "redTax, "\
+                "stock"\
+                ") VALUES (?, ?, ?, ?, ?)"
 
         cur.execute(query, data)
         self.conn.commit()
@@ -47,7 +69,14 @@ class Dao():
         cur = self.conn.cursor()
 
         data = (identity.name, identity.price, identity.inTax, identity.reduceTax, identity.stocks, identity.id)
-        query = "UPDATE items SET item=?, price=?, inTax=?, redTax=?, stock=? WHERE id=?"
+        query = "UPDATE"\
+                + self.productsTableName + " SET "\
+                "item=?, "\
+                "price=?, "\
+                "inTax=?, "\
+                "redTax=?, "\
+                "stock=? "\
+                "WHERE id=?"
 
         cur.execute(query, data)
         self.conn.commit()
@@ -58,7 +87,9 @@ class Dao():
         cur = self.conn.cursor()
 
         id = (id,)
-        cur.execute("DELETE FROM items WHERE id=?", id)
+        query = "DELETE FROM " + self.productsTableName + "WHERE id=?"
+    
+        cur.execute(query, id)
         self.conn.commit()
 
     def FindAllItems(self):
@@ -66,21 +97,17 @@ class Dao():
 
         cur = self.conn.cursor()
 
+        query = "SELECT * FROM " + self.productsTableName
+
         ret = []
-        for data in cur.execute("SELECT * FROM items"):
+        for data in cur.execute(query):
             print(data)
             d = V.item()
             d.id = data[0]
             d.name = data[1]
             d.price = data[2]
-            if(data[3]==1):
-                d.inTax = True
-            else:
-                d.inTax = False
-            if(data[4]==1):
-                d.reduceTax = True
-            else:
-                d.reduceTax = False
+            ret.inTax = __class__.BinToBool(data[3])
+            ret.reduceTax = __class__.BinToBool(data[4])
             d.stocks = data[5]
 
             ret.append(d)
@@ -89,26 +116,22 @@ class Dao():
 
     def FindItemById(self, id: int):
         self.CreatItemsTable()
-
-        id = (id,)
+        
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM items WHERE id=?", id)
+        
+        id = (id,)
+        query = "SELECT * FROM " + self.productsTableName + " WHERE id=?"
+        
+        cur.execute(query, id)
 
         data = cur.fetchone()
-        
         ret = V.item()
         if(data != None):
             ret.id = data[0]
             ret.name = data[1]
             ret.price = data[2]
-            if(data[3]==1):
-                ret.inTax = True
-            else:
-                ret.inTax = False
-            if(data[4]==1):
-                ret.reduceTax = True
-            else:
-                ret.reduceTax = False
+            ret.inTax = __class__.BinToBool(data[3])
+            ret.reduceTax = __class__.BinToBool(data[4])
             ret.stocks = data[5]
             
             return ret
@@ -119,7 +142,19 @@ class Dao():
     def CreatOrdersTable(self):
         cur = self.conn.cursor()
 
-        query = "CREATE TABLE IF NOT EXISTS " + self.ordersTable + " (id INTEGER PRIMARY KEY AUTOINCREMENT, refNum INTEGER, orderTime TEXT, orders TEXT, state TEXT)"
+        query = "CREATE TABLE IF NOT EXISTS "\
+                + self.ordersTableName + " ("\
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "\
+                "refNum INTEGER, "\
+                "orderTime TEXT, "\
+                "orders TEXT, "\
+                "total INTEGER, "\
+                "inTax INTEGER, "\
+                "outTax INTEGER, "\
+                "receive INTEGER, "\
+                "changes INTEGER, "\
+                "state TEXT"\
+                ")"
 
         cur.execute(query)
         self.conn.commit()
@@ -127,7 +162,7 @@ class Dao():
     def DropOrdersTable(self):
         cur = self.conn.cursor()
 
-        query = "DROP TABLE IF EXISTS " + self.ordersTable
+        query = "DROP TABLE IF EXISTS " + self.ordersTableName
 
         cur.execute(query)
         self.conn.commit()
@@ -137,8 +172,27 @@ class Dao():
 
         cur = self.conn.cursor()
 
-        data = (order.refNum, order.orderTime, order.orders, order.state)
-        query = "INSERT INTO " + self.ordersTable + " (refNum, orderTime, orders, state) VALUES (?, ?, ?, ?)"
+        data = (order.refNum, 
+                order.orderTime, 
+                order.orders, 
+                order.total, 
+                order.inTax, 
+                order.outTax, 
+                order.receive, 
+                order.changes, 
+                order.state)
+        query = "INSERT INTO "\
+                + self.ordersTableName + " ("\
+                "refNum, "\
+                "orderTime, "\
+                "orders, "\
+                "total, "\
+                "inTax, "\
+                "outTax, "\
+                "receive, "\
+                "changes, "\
+                "state"\
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
         cur.execute(query, data)
         self.conn.commit()
@@ -148,8 +202,28 @@ class Dao():
 
         cur = self.conn.cursor()
 
-        data = (order.orders, order.state, order.id)
-        query = "UPDATE " + self.ordersTable + " SET orders=?, state=? WHERE id=?"
+        data = (order.refNum, 
+                order.orderTime, 
+                order.orders, 
+                order.total, 
+                order.inTax, 
+                order.outTax, 
+                order.receive, 
+                order.changes, 
+                order.state, 
+                order.id)
+        query = "UPDATE "\
+                + self.ordersTableName + " SET "\
+                "refNum=?, "\
+                "orderTime=?, "\
+                "orders=?, "\
+                "total=?, "\
+                "inTax=?, "\
+                "outTax=?, "\
+                "receive=?, "\
+                "changes=?, "\
+                "state=? "\
+                "WHERE id=?"
 
         cur.execute(query, data)
         self.conn.commit()
@@ -160,7 +234,8 @@ class Dao():
         cur = self.conn.cursor()
 
         id = (id,)
-        query = "DELETE FROM " + self.ordersTable + " WHERE id=?"
+        query = "DELETE FROM " + self.ordersTableName + " WHERE id=?"
+
         cur.execute(query, id)
         self.conn.commit()
 
@@ -169,15 +244,22 @@ class Dao():
 
         cur = self.conn.cursor()
 
+        query = "SELECT * FROM " + self.ordersTableName
+
         ret = []
-        for data in cur.execute("SELECT * FROM " + self.ordersTable):
+        for data in cur.execute(query):
             print(data)
             d = V.order()
             d.id = data[0]
             d.refNo = data[1]
             d.orderTime = data[2]
             d.orders = data[3]
-            d.state = data[4]
+            d.total = data[4]
+            d.inTax = data[5]
+            d.outTax = data[6]
+            d.receive = data[7]
+            d.changes = data[8]
+            d.state = data[9]
 
             ret.append(d)
 
@@ -185,13 +267,15 @@ class Dao():
 
     def FindOrderById(self, id: int):
         self.CreatOrdersTable()
-
-        id = (id,)
+        
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM " + self.ordersTable + " WHERE id=?", id)
+        
+        id = (id,)
+        query = "SELECT * FROM " + self.ordersTableName + " WHERE id=?"
+
+        cur.execute(query, id)
 
         data = cur.fetchone()
-
         ret = V.order
         if(data != None):
             print(data)
@@ -200,7 +284,12 @@ class Dao():
             d.refNo = data[1]
             d.orderTime = data[2]
             d.orders = data[3]
-            d.state = data[4]
+            d.total = data[4]
+            d.inTax = data[5]
+            d.outTax = data[6]
+            d.receive = data[7]
+            d.changes = data[8]
+            d.state = data[9]
 
             return ret
         else:
