@@ -10,6 +10,7 @@ class Dao():
     def __init__(self):
         self._file_name = G.OpenDateYear + "_Data.db"
         self.conn = SQL.connect(self._file_name)
+        self.conn.row_factory = SQL.Row
 
         self.productsTableName = "items"
         self.ordersTableName = "O" + G.OpenDateStr
@@ -86,8 +87,8 @@ class Dao():
         
         cur = self.conn.cursor()
 
-        id = (id,)
-        query = "DELETE FROM " + self.productsTableName + "WHERE id=?"
+        id = (id, )
+        query = "DELETE FROM " + self.productsTableName + " WHERE id=?"
     
         cur.execute(query, id)
         self.conn.commit()
@@ -98,20 +99,24 @@ class Dao():
         cur = self.conn.cursor()
 
         query = "SELECT * FROM " + self.productsTableName
+        cur.execute(query)
 
         ret = []
-        for data in cur.execute(query):
-            print(data)
-            d = V.item()
-            d.id = data["id"]
-            d.name = data["item"]
-            d.price = data["price"]
-            d.inTax = __class__.BinToBool(data["inTax"])
-            d.reduceTax = __class__.BinToBool(data["redTax"])
-            d.stocks = data["stock"]
+        while(True):
+            data = cur.fetchone()
+            if(data!=None):
+                print(tuple(data))
+                d = V.item()
+                d.id = data["id"]
+                d.name = data["item"]
+                d.price = data["price"]
+                d.inTax = __class__.BinToBool(data["inTax"])
+                d.reduceTax = __class__.BinToBool(data["redTax"])
+                d.stocks = data["stock"]
 
-            ret.append(d)
-
+                ret.append(d)
+            else:
+                break
         return ret
 
     def FindItemById(self, id: int):
@@ -245,24 +250,29 @@ class Dao():
         cur = self.conn.cursor()
 
         query = "SELECT * FROM " + self.ordersTableName
+        cur.execute(query)
 
         ret = []
-        for data in cur.execute(query):
-            print(data)
-            d = V.order()
-            d.id = data["id"]
-            d.refNum = data["refNum"]
-            d.orderTime = data["orderTime"]
-            d.orders = data["orders"]
-            d.total = data["total"]
-            d.inTax = data["inTax"]
-            d.outTax = data["outTax"]
-            d.receive = data["receive"]
-            d.changes = data["changes"]
-            d.state = data["state"]
+        while(True):
+            data = cur.fetchone()
+            if(data!=None):
+                print(tuple(data))
+                d = V.order()
+                d.id = data["id"]
+                d.refNum = data["refNum"]
+                d.orderTime = data["orderTime"]
+                d.orders = data["orders"]
+                d.total = data["total"]
+                d.inTax = data["inTax"]
+                d.outTax = data["outTax"]
+                d.receive = data["receive"]
+                d.changes = data["changes"]
+                d.state = data["state"]
 
-            ret.append(d)
-
+                ret.append(d)
+            else:
+                break
+    
         return ret
 
     def FindOrderById(self, id: int):
@@ -277,7 +287,7 @@ class Dao():
 
         data = cur.fetchone()
         if(data != None):
-            print(data)
+            print(tuple(data))
             d = V.order()
             d.id = data["id"]
             d.refNum = data["refNum"]
@@ -301,12 +311,17 @@ class Dao():
         
         refnum = (refnum,)
         query = "SELECT * FROM " + self.ordersTableName + " WHERE refNum=?"
+        cur.execute(query, refnum)
 
         ret = []
-        for data in cur.execute(query, refnum):
-            print(data)
-            state = data["state"]
-            if(state=="ordered" or state=="available"):
-                return False
+        while(True):
+            data = cur.fetchone()
+            if(data!=None):
+                print(tuple(data))
+                state = data["state"]
+                if(state=="ordered" or state=="available"):
+                    return False
+            else:
+                break
 
         return True

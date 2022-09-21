@@ -18,7 +18,7 @@ master.withdraw()
     ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
     ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
     ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
-temp: tk.Label
+temp = tk.Label(master)
 def initWindow():
     global temp
     temp = tk.Label(master)
@@ -29,6 +29,7 @@ def initWindow():
 def CloseWindow():
     global temp
     temp.destroy()
+    temp = tk.Label(master)
     BtnPower.config(state="disabled")
     EntAdminPswd.config(state="normal")
     BtnActivate.config(state="normal")

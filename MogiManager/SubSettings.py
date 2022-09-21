@@ -19,13 +19,15 @@ o = D.Dao()
     ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
     ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
     ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
-temp: tk.Label
+temp = tk.Label(master)
 def initWindow():
     global temp
     temp = tk.Label(master)
 
 def CloseWindow():
+    global temp
     temp.destroy()
+    temp = tk.Label(master)
     master.withdraw()
 
 
@@ -253,6 +255,11 @@ def Cleanup():
         RefreshTable()
 
 def AddProduct():
+    # コンテンツ設定
+    S.LblProductTitle.config(text="商品追加")
+    S.BtnProductApply.config(command=S.AddProduct, text="登録")
+    S.FrmProduct.place(y=0, x=0, width=500, height=600)
+
     # 初期化/画面構成設定
     S.initWindow()
     S.master.geometry("500x600")
@@ -260,11 +267,6 @@ def AddProduct():
     S.master.grab_set()
     S.master.focus_set()
     S.master.deiconify()
-
-    # コンテンツ設定
-    S.LblProductTitle.config(text="商品追加")
-    S.BtnProductApply.config(command=S.AddProduct, text="登録")
-    S.FrmProduct.place(y=0, x=0, width=500, height=600)
 
     # 閉じられるまで待つ
     master.wait_window(S.temp)
@@ -273,14 +275,6 @@ def AddProduct():
     Cleanup()
 
 def EditProduct(event):
-    # 初期化/画面構成設定
-    S.initWindow()
-    S.master.geometry("500x600")
-    S.master.deiconify()
-    S.master.transient(master)
-    S.master.grab_set()
-    S.master.focus_set()
-
     # コンテンツ設定
     S.LblProductTitle.config(text="商品編集")
     S.BtnProductApply.config(command=S.ApplyProduct, text="更新")
@@ -292,6 +286,14 @@ def EditProduct(event):
     S.ProductRedtax.set(data.reduceTax)
     S.FrmProduct.place(y=0, x=0, width=500, height=600)
     S.BtnProductDelete.place(y=500, x=20)
+
+    # 初期化/画面構成設定
+    S.initWindow()
+    S.master.geometry("500x600")
+    S.master.deiconify()
+    S.master.transient(master)
+    S.master.grab_set()
+    S.master.focus_set()
 
     # 閉じられるまで待つ
     master.wait_window(S.temp)

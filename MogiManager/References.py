@@ -1,7 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import Global as G
-import SettingPanels as S
 
 # 入力規制
     ### 数字のみ

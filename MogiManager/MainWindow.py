@@ -28,13 +28,13 @@ LblOpenDate = tk.Label(cv.CvArea, textvariable=G.OpenDate, font=("", 28), bd=3, 
 LblOpenDate.place(y=20, x=20, width=460, height=60)
 
 LblNowTime = tk.Label(cv.CvArea, textvariable=G.NowTime, font=("", 55, "bold"), bd=3, relief=tk.SOLID)
-LblNowTime.place(y=20, x=WIN_W/2, anchor=tk.N, width=320, height=100)
+LblNowTime.place(y=20, x=WIN_W/2, anchor=tk.N, width=360, height=100)
 
 
 LblOpenTime = tk.Label(cv.CvArea, textvariable=G.OpenTime, font=("", 25), bd=3, relief=tk.SOLID)
-LblOpenTime.place(y=20, x=1160, width=320, height=45)
+LblOpenTime.place(y=20, x=1160, width=320, height=52)
 LblCloseTime = tk.Label(cv.CvArea, textvariable=G.CloseTime, font=("", 25), bd=3, relief=tk.SOLID)
-LblCloseTime.place(y=75, x=1160, width=320, height=45)
+LblCloseTime.place(y=120, x=1160, width=320, height=52, anchor="sw")
 
 ### 注文タブ        Orders
 # cv2.CvArea -> FrmOrderTab
