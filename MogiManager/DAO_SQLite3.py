@@ -103,12 +103,12 @@ class Dao():
         for data in cur.execute(query):
             print(data)
             d = V.item()
-            d.id = data[0]
-            d.name = data[1]
-            d.price = data[2]
-            ret.inTax = __class__.BinToBool(data[3])
-            ret.reduceTax = __class__.BinToBool(data[4])
-            d.stocks = data[5]
+            d.id = data["id"]
+            d.name = data["item"]
+            d.price = data["price"]
+            d.inTax = __class__.BinToBool(data["inTax"])
+            d.reduceTax = __class__.BinToBool(data["redTax"])
+            d.stocks = data["stock"]
 
             ret.append(d)
 
@@ -125,14 +125,14 @@ class Dao():
         cur.execute(query, id)
 
         data = cur.fetchone()
-        ret = V.item()
         if(data != None):
-            ret.id = data[0]
-            ret.name = data[1]
-            ret.price = data[2]
-            ret.inTax = __class__.BinToBool(data[3])
-            ret.reduceTax = __class__.BinToBool(data[4])
-            ret.stocks = data[5]
+            ret = V.item()
+            ret.id = data["id"]
+            ret.name = data["item"]
+            ret.price = data["price"]
+            ret.inTax = __class__.BinToBool(data["inTax"])
+            ret.reduceTax = __class__.BinToBool(data["redTax"])
+            ret.stocks = data["stock"]
             
             return ret
         else:
@@ -239,7 +239,7 @@ class Dao():
         cur.execute(query, id)
         self.conn.commit()
 
-    def FindAllOrder(self):
+    def FindAllOrders(self):
         self.CreatOrdersTable()
 
         cur = self.conn.cursor()
@@ -250,16 +250,16 @@ class Dao():
         for data in cur.execute(query):
             print(data)
             d = V.order()
-            d.id = data[0]
-            d.refNo = data[1]
-            d.orderTime = data[2]
-            d.orders = data[3]
-            d.total = data[4]
-            d.inTax = data[5]
-            d.outTax = data[6]
-            d.receive = data[7]
-            d.changes = data[8]
-            d.state = data[9]
+            d.id = data["id"]
+            d.refNum = data["refNum"]
+            d.orderTime = data["orderTime"]
+            d.orders = data["orders"]
+            d.total = data["total"]
+            d.inTax = data["inTax"]
+            d.outTax = data["outTax"]
+            d.receive = data["receive"]
+            d.changes = data["changes"]
+            d.state = data["state"]
 
             ret.append(d)
 
@@ -276,21 +276,37 @@ class Dao():
         cur.execute(query, id)
 
         data = cur.fetchone()
-        ret = V.order
         if(data != None):
             print(data)
             d = V.order()
-            d.id = data[0]
-            d.refNo = data[1]
-            d.orderTime = data[2]
-            d.orders = data[3]
-            d.total = data[4]
-            d.inTax = data[5]
-            d.outTax = data[6]
-            d.receive = data[7]
-            d.changes = data[8]
-            d.state = data[9]
+            d.id = data["id"]
+            d.refNum = data["refNum"]
+            d.orderTime = data["orderTime"]
+            d.orders = data["orders"]
+            d.total = data["total"]
+            d.inTax = data["inTax"]
+            d.outTax = data["outTax"]
+            d.receive = data["receive"]
+            d.changes = data["changes"]
+            d.state = data["state"]
 
-            return ret
+            return d
         else:
             return None
+
+    def CheckRefnumUsing(self, refnum: int):
+        self.CreatOrdersTable()
+        
+        cur = self.conn.cursor()
+        
+        refnum = (refnum,)
+        query = "SELECT * FROM " + self.ordersTableName + " WHERE refNum=?"
+
+        ret = []
+        for data in cur.execute(query, refnum):
+            print(data)
+            state = data["state"]
+            if(state=="ordered" or state=="available"):
+                return False
+
+        return True
