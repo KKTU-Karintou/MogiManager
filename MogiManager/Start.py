@@ -7,6 +7,7 @@ import tkinter.messagebox as msg
 import Global as G
 import MainWindow as M
 
+
 G.root.title("模擬店マネージャー ver.1.0.0a")
 G.root.geometry("960x540")
 G.root.maxsize(width=1920, height=1080)
@@ -81,6 +82,6 @@ BtnShutdown = tk.Button(FrmWakeup, text="終了", command=Shutdown, font=("", 30
 BtnShutdown.place(y=10, x=950, anchor="ne")
 
 G.root.protocol("WM_DELETE_WINDOW", Shutdown)
-M.clock()
-M.total()
+#M.clock()
+#M.total()
 G.root.mainloop()

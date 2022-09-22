@@ -3,6 +3,9 @@ import tkinter as tk
 # ルートウィンドウ
 root = tk.Tk()
 root.resizable(False, False)
+dialog1 = tk.Toplevel(root)
+dialog2 = tk.Toplevel(dialog1)
+dialog3 = tk.Toplevel(dialog2)
 
 # グローバル変数
 OpenDateYear = '2022'
@@ -12,7 +15,7 @@ NowTime = tk.StringVar(value='00時00分')
 OpenTime = tk.StringVar(value='営業開始 : 09時00分')
 CloseTime = tk.StringVar(value='営業終了 : 16時00分')
 
-ProductEditId = 0
+ProductEditId = int(0)
 
 # 状態フラグ
 UpdateItemList = False

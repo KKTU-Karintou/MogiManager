@@ -70,7 +70,7 @@ class Dao():
         cur = self.conn.cursor()
 
         data = (identity.name, identity.price, identity.inTax, identity.reduceTax, identity.stocks, identity.id)
-        query = "UPDATE"\
+        query = "UPDATE "\
                 + self.productsTableName + " SET "\
                 "item=?, "\
                 "price=?, "\

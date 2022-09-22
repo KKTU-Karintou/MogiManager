@@ -7,7 +7,7 @@ import DAO_SQLite3 as D
 import SettingPanels as S
 
 # ベースウィンドウ準備
-master = tk.Toplevel()
+master = G.dialog2
 master.title("詳細設定")
 master.resizable(False, False)
 master.withdraw()
@@ -187,7 +187,7 @@ FrmMenus.config(width=1000, height=200, bg="blue")
 
 # 一覧生成(再生成処理)
     ### 生成したオブジェクト群は画面に配置後、制御を離れる。
-    ### そのためフレームごと破棄すれば参照がなくなり破棄される。はず・・・
+    ### そのためフレームごと破棄すれば参照がなくなり破棄される。(確認済み)
 FrmContents = tk.Frame(FrmMenus, width=1000)
 FrmContents.place(y=0, x=0)
 
@@ -255,6 +255,7 @@ def Cleanup():
         RefreshTable()
 
 def AddProduct():
+    S.master.deiconify()
     # コンテンツ設定
     S.LblProductTitle.config(text="商品追加")
     S.BtnProductApply.config(command=S.AddProduct, text="登録")
@@ -266,26 +267,29 @@ def AddProduct():
     S.master.transient(master)
     S.master.grab_set()
     S.master.focus_set()
-    S.master.deiconify()
 
     # 閉じられるまで待つ
+    G.root.update()
+    S.master.update()
+    S.master.update_idletasks()
     master.wait_window(S.temp)
 
     # 初期化
     Cleanup()
 
 def EditProduct(event):
+    G.root.update()
     # コンテンツ設定
     S.LblProductTitle.config(text="商品編集")
     S.BtnProductApply.config(command=S.ApplyProduct, text="更新")
-
+    S.BtnProductDelete.place(y=500, x=20)
+    
     data = o.FindItemById(G.ProductEditId)
     S.EntProductName.insert(0, data.name)
     S.EntProductPrice.insert(0, data.price)
     S.ProductIntax.set(data.inTax)
     S.ProductRedtax.set(data.reduceTax)
     S.FrmProduct.place(y=0, x=0, width=500, height=600)
-    S.BtnProductDelete.place(y=500, x=20)
 
     # 初期化/画面構成設定
     S.initWindow()
@@ -299,6 +303,7 @@ def EditProduct(event):
     master.wait_window(S.temp)
 
     # 初期化
+    S.BtnProductDelete.place_forget()
     Cleanup()
 
 # ボタン

@@ -173,12 +173,17 @@ def TabButtonChange(this: int):
 
 # 設定画面表示
 def OpenSettings():
+    # 初期化/画面構成設定
     S.initWindow()
     S.master.grab_set()
     S.master.focus_set()
     S.master.transient(G.root)
     S.master.deiconify()
+
+    # 閉じられるまで待つ
     G.root.wait_window(S.temp)
+
+    # 初期化
     if(G.root!=None):
         S.master.grab_release()
     if(G.UpdateItemList):

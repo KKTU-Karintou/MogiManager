@@ -1,16 +1,16 @@
 import tkinter as tk
 import tkinter.messagebox as msg
-from winreg import DeleteKey
 import Global as G
 import DAO_SQLite3 as D
 import DAO_VARIABLE as V
 
 # ベースウィンドウ準備
-master = tk.Toplevel()
+master = G.dialog3
 master.resizable(False, False)
 master.withdraw()
-master.deiconify()
-master.withdraw()
+
+LblTest = tk.Label(master, text="見えないはず", font=("", 35))
+LblTest.place(y=0, x=0)
 
 # データベースアクセスオブジェクト
 o = D.Dao()
@@ -19,20 +19,22 @@ o = D.Dao()
     ### 呼出元は対象としたウィジェットが destroy されたかどうかを見ている。
     ### destroy するとメモリごと消えるので、非表示に対応するため身代わりを用意する。
     ### グローバル変数の参照以外の操作は global を付けないとローカル変数として扱われる。
-temp = tk.Label(master)
+temp = None
 def initWindow():
     global temp
-    temp = tk.Label(master)
+    if(temp==None):
+        temp = tk.Label(master)
 
 def CloseWindow():
     global temp
     temp.destroy()
-    temp = tk.Label(master)
+    temp = None
     master.withdraw()
 
 
     ### 販売品目設定：商品追加/編集/削除 ###
 FrmProduct = tk.Frame(master, width=500, height=600, bg="yellow green")
+FrmProduct.place(y=0, x=0)
 
 LblProductTitle = tk.Label(FrmProduct, text="商品追加", font=("", 25))
 LblProductTitle.place(y=20, x=250, anchor="c")
@@ -105,7 +107,6 @@ def DeleteProduct():
         G.UpdateItemList = True
         msg.showinfo("", "削除しました")
         CloseWindow()
-        BtnProductDelete.place_forget()
 
 
 # 各ボタンのコールバック設定

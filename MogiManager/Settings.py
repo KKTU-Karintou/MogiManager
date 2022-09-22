@@ -8,7 +8,7 @@ WIN_W = 1280
 WIN_H = 720
 WIN_SIZE = "1280x720"
 
-master = tk.Toplevel(width=WIN_W, height=WIN_H)
+master = G.dialog1
 master.title("システム設定")
 master.geometry(WIN_SIZE)
 master.resizable(False, False)
@@ -118,9 +118,11 @@ def OpenSetOpentime():
     S.FrmSetOpentime.place(y=0, x=0, width=640, height=360)
     
     # 閉じられるまで待つ
+    master.grab_release()
     master.wait_window(S.temp)
 
     # 初期化
+    master.grab_set()
     S.FrmSetOpentime.place_forget()
     S.master.grab_release()
 
@@ -131,8 +133,10 @@ BtnSetOpening.place(y=0, x=FRM_W, anchor="ne")
 
     ### 販売品目設定 ###
 def OpenSetProduct():
+    G.root.update()
     # 初期化/画面構成設定
     S.RefreshTable()
+    master.update_idletasks()
     S.initWindow()
     S.master.geometry("1280x720")
     S.master.grab_set()
